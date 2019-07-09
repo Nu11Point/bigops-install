@@ -6,13 +6,24 @@ stty erase '^H'
 
 cp -f /opt/bigops/install/yum.repos.d/* /etc/yum.repos.d/
 
+which "make" > /dev/null
+if [ $? != 0 ];then
+    yum -y install make
+fi
+
 which "gcc" > /dev/null
 if [ $? != 0 ];then
-    yum -y install gcc make
+    yum -y install gcc
+fi
+
+which "g++" > /dev/null
+if [ $? != 0 ];then
+    yum -y install gcc-c++
 fi
 
 which "medusa" > /dev/null
 if [ $? != 0 ];then
+    yum -y install libssh2
     cd /opt/bigops/install/soft/
     tar zxvf medusa-2.2.tar.gz
     cd medusa-2.2
@@ -20,10 +31,20 @@ if [ $? != 0 ];then
     make && make install
 fi
 
+if [ -z "$(nmap -V|egrep 7.70)" ];then
+    cd /opt/bigops/install/soft/
+    tar zxvf nmap-7.70.tgz
+    cd nmap-7.70
+    ./configure --prefix=/usr
+    make && make install
+fi
+
 which "ansible" > /dev/null
 if [ $? != 0 ];then
     yum -y install ansible
 fi
+cp -f /opt/bigops/install/ansible.cfg /root/.ansible.cfg
+sed -i 's/^[ ]*StrictHostKeyChecking.*/StrictHostKeyChecking no/g' /etc/ssh/ssh_config
 
 if [ -f /usr/bin/jqbak ];then
     cp -f /opt/bigops/install/soft/jq-linux64 /usr/bin/jq
