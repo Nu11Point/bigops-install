@@ -112,8 +112,8 @@ sed -i "s#^spring.datasource.url=.*#spring.datasource.url=jdbc:mysql://${dbhost}
 sed -i "s#^spring.datasource.username=.*#spring.datasource.username=${dbuser}#g" /opt/bigops/config/bigops.properties
 sed -i "s#^spring.datasource.password=.*#spring.datasource.password=${dbpass}#g" /opt/bigops/config/bigops.properties
 
-mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} -e "drop database if exists ${dbname}" 2>/dev/null
+mysqladmin -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} drop ${dbname}
 mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} -e "create database ${dbname}" 2>/dev/null
 mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} ${dbname} </opt/bigops/install/mysql/bigops-1.0.0.sql 2>/dev/null
 
-echo "please run /bin/sh /opt/bigops/bin/restart.sh"
+/bin/sh /opt/bigops/bin/restart.sh
