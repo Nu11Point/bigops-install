@@ -6,6 +6,33 @@ stty erase '^H'
 
 cp -f /opt/bigops/install/yum.repos.d/* /etc/yum.repos.d/
 
+which "gcc" > /dev/null
+if [ $? != 0 ];then
+    yum -y install gcc make
+fi
+
+which "medusa" > /dev/null
+if [ $? != 0 ];then
+    cd /opt/bigops/install/soft/
+    tar zxvf medusa-2.2.tar.gz
+    cd medusa-2.2
+     ./configure --prefix=/usr
+    make && make install
+fi
+
+which "ansible" > /dev/null
+if [ $? != 0 ];then
+    yum -y install ansible
+fi
+
+if [ -f /usr/bin/jqbak ];then
+    cp -f /opt/bigops/install/soft/jq-linux64 /usr/bin/jq
+else
+    cp  /usr/bin/jq /usr/bin/jqbak
+    cp -f /opt/bigops/install/soft/jq-linux64 /usr/bin/jq
+fi
+chmod 777 /usr/bin/jq
+
 which "nginx" > /dev/null
 if [ $? != 0 ];then
     yum -y install nginx
