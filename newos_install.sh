@@ -68,12 +68,12 @@ cp -f /opt/bigops/config/bigops.properties.example /opt/bigops/config/bigops.pro
 echo -e "please input sso url, for example: sso.bigops.com"
 echo -e ">\c"
 read ssourl
-ssourl=`echo "$ssourl"|sed 's/[ ]*//g'`
+ssourl=`echo "$ssourl"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
 
 echo -e "please input homeurl, for example: work.bigops.com"
 echo -e ">\c"
 read homeurl
-homeurl=`echo "$homeurl"|sed 's/[ ]*//g'`
+homeurl=`echo "$homeurl"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
 
 cp -f /opt/bigops/install/lnmp_conf/nginx.conf /etc/nginx/nginx.conf
 cp -f /opt/bigops/install/lnmp_conf/conf.d/default.conf /etc/nginx/conf.d/default.conf
@@ -107,6 +107,12 @@ read dbuser
 
 echo -e "please input db pass >\c"
 read dbpass
+
+dbhost=`echo "$dbhost"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
+dbport=`echo "$dbport"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
+dbname=`echo "$dbname"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
+dbuser=`echo "$dbuser"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
+dbpass=`echo "$dbpass"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
 
 sed -i "s#^spring.datasource.url=.*#spring.datasource.url=jdbc:mysql://${dbhost}:${dbport}/${dbname}\?useSSL=false\&useUnicode=true\&autoReconnect=true\&characterEncoding=UTF-8\&allowPublicKeyRetrieval=true#g" /opt/bigops/config/bigops.properties
 sed -i "s#^spring.datasource.username=.*#spring.datasource.username=${dbuser}#g" /opt/bigops/config/bigops.properties
