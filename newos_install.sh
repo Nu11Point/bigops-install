@@ -122,4 +122,7 @@ mysqladmin -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} drop ${dbname}
 mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} -e "create database ${dbname}" 2>/dev/null
 mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} ${dbname} </opt/bigops/install/mysql/bigops-1.0.0.sql 2>/dev/null
 
-/bin/sh /opt/bigops/bin/restart.sh
+if [ $? == 0 ];then
+    /bin/sh /opt/bigops/bin/restart.sh
+fi
+
