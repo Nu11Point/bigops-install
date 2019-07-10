@@ -124,5 +124,7 @@ mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} ${dbname} </opt/bigops/ins
 
 if [ $? == 0 ];then
     /bin/sh /opt/bigops/bin/restart.sh
+else
+    echo "MySQL setting error, please check"
 fi
 
