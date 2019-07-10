@@ -23,7 +23,7 @@ fi
 
 which "medusa" > /dev/null
 if [ $? != 0 ];then
-    yum -y install libssh2
+    yum -y install libssh2 openssl openssl-libs openssl-devel
     cd /opt/bigops/install/soft/
     tar zxvf medusa-2.2.tar.gz
     cd medusa-2.2
