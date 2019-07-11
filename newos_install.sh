@@ -65,15 +65,21 @@ fi
 
 cp -f /opt/bigops/config/bigops.properties.example /opt/bigops/config/bigops.properties
 
-echo -e "please input sso url, for example: sso.bigops.com"
+echo -e "please input sso url, default sso.bigops.com"
 echo -e ">\c"
 read ssourl
 ssourl=`echo "$ssourl"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
+if [ -z "${ssourl}" ];then
+    ssourl='sso.bigops.com'
+fi
 
-echo -e "please input homeurl, for example: work.bigops.com"
+echo -e "please input home url, default work.bigops.com"
 echo -e ">\c"
-read homeurl
-homeurl=`echo "$homeurl"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
+read workurl
+workurl=`echo "$workurl"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
+if [ -z "${workurl}" ];then
+    workurl='work.bigops.com'
+fi
 
 cp -f /opt/bigops/install/lnmp_conf/nginx.conf /etc/nginx/nginx.conf
 cp -f /opt/bigops/install/lnmp_conf/conf.d/default.conf /etc/nginx/conf.d/default.conf
@@ -82,49 +88,74 @@ cp -f /opt/bigops/install/lnmp_conf/conf.d/work.conf /etc/nginx/conf.d/work.conf
 cp -f /opt/bigops/install/lnmp_conf/conf.d/zabbix.conf /etc/nginx/conf.d/zabbix.conf
 
 sed -i "s#^[ \t]*server_name.*#    server_name ${ssourl};#g" /etc/nginx/conf.d/sso.conf
-sed -i "s#^[ \t]*server_name.*#    server_name ${homeurl};#g" /etc/nginx/conf.d/work.conf
+sed -i "s#^[ \t]*server_name.*#    server_name ${workurl};#g" /etc/nginx/conf.d/work.conf
 
 sed -i "s#^[ \t]*access_log.*#    access_log  /opt/ngxlog/${ssourl}.access.log main;#g" /etc/nginx/conf.d/sso.conf
-sed -i "s#^[ \t]*access_log.*#    access_log  /opt/ngxlog/${homeurl}.access.log main;#g" /etc/nginx/conf.d/work.conf
+sed -i "s#^[ \t]*access_log.*#    access_log  /opt/ngxlog/${workurl}.access.log main;#g" /etc/nginx/conf.d/work.conf
 
 sed -i "s#^[ \t]*error_log.*#    error_log  /opt/ngxlog/${ssourl}.error.log;#g" /etc/nginx/conf.d/sso.conf
-sed -i "s#^[ \t]*error_log.*#    error_log  /opt/ngxlog/${homeurl}.error.log;#g" /etc/nginx/conf.d/work.conf
+sed -i "s#^[ \t]*error_log.*#    error_log  /opt/ngxlog/${workurl}.error.log;#g" /etc/nginx/conf.d/work.conf
 
 sed -i "s#^sso.url=.*#sso.url=http://${ssourl}#g" /opt/bigops/config/bigops.properties
-sed -i "s#^home.url=.*#home.url=http://${homeurl}#g" /opt/bigops/config/bigops.properties
+sed -i "s#^home.url=.*#home.url=http://${workurl}#g" /opt/bigops/config/bigops.properties
 
-echo -e "please input db host >\c"
+echo -e "please input db host, default 127.0.0.1 >\c"
 read dbhost
 
-echo -e "please input db port >\c"
+echo -e "please input db port, default 3306 >\c"
 read dbport
 
-echo -e "please input db name >\c"
+echo -e "please input db name, default bigops >\c"
 read dbname
 
-echo -e "please input db user >\c"
+echo -e "please input db user, default root >\c"
 read dbuser
 
 echo -e "please input db pass >\c"
 read dbpass
 
-dbhost=`echo "$dbhost"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
-dbport=`echo "$dbport"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
-dbname=`echo "$dbname"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
-dbuser=`echo "$dbuser"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
-dbpass=`echo "$dbpass"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
+dbhost=`echo "${dbhost}"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
+dbport=`echo "${dbport}"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
+dbname=`echo "${dbname}"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
+dbuser=`echo "${dbuser}"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
 
-sed -i "s#^spring.datasource.url=.*#spring.datasource.url=jdbc:mysql://${dbhost}:${dbport}/${dbname}\?useSSL=false\&useUnicode=true\&autoReconnect=true\&characterEncoding=UTF-8#g" /opt/bigops/config/bigops.properties
+if [ -z "${dbhost}" ];then
+    dbhost='127.0.0.1'
+fi
+if [ -z "${dbport}" ];then
+    dbport='3306'
+fi
+if [ -z "${dbname}" ];then
+    dbname='bigops'
+fi
+if [ -z "${dbuser}" ];then
+    dbuser='root'
+fi
+if [ -z "${dbpass}" ];then
+    echo 'please input db pass'
+    exit
+fi
+
+sed -i "s#^spring.datasource.url=.*#spring.datasource.url=jdbc:mysql://${dbhost}:${dbport}/${dbname}\?useSSL=false\&useUnicode=true\&autoReconnect=true\&
+characterEncoding=UTF-8#g" /opt/bigops/config/bigops.properties
 sed -i "s#^spring.datasource.username=.*#spring.datasource.username=${dbuser}#g" /opt/bigops/config/bigops.properties
 sed -i "s#^spring.datasource.password=.*#spring.datasource.password=${dbpass}#g" /opt/bigops/config/bigops.properties
 
-mysqladmin -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} drop ${dbname}
+echo
+echo ----------------------------------
+mysqladmin -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} drop ${dbname} 2>/dev/null
+if [ $? != 0 ];then echo "installation failed.code 1";fi
 mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} -e "create database ${dbname}" 2>/dev/null
+if [ $? != 0 ];then echo "installation failed. code 2";fi
+echo
+echo ----------------------------------
 mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} ${dbname} </opt/bigops/install/mysql/bigops-1.0.0.sql 2>/dev/null
-
+if [ $? != 0 ];then echo "installation failed. code 3";fi
+mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} -e "show databases like '${dbname}'" 2>/dev/null
 if [ $? == 0 ];then
+    echo
+    echo ----------------------------------
     /bin/sh /opt/bigops/bin/restart.sh
 else
-    echo "MySQL setting error, please check"
+    echo "installation failed. code 4"
 fi
-
