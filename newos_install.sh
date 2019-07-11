@@ -136,7 +136,8 @@ dbport=`echo "${dbport}"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
 dbname=`echo "${dbname}"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
 dbuser=`echo "${dbuser}"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
 
-sed -i "s#^spring.datasource.url=.*#spring.datasource.url=jdbc:mysql://${dbhost}:${dbport}/${dbname}\?useSSL=false\&useUnicode=true\&autoReconnect=true\&characterEncoding=UTF-8#g" /opt/bigops/config/bigops.properties
+sed -i "s#^spring.datasource.url=.*#spring.datasource.url=jdbc:mysql://${dbhost}:${dbport}/${dbname}\
+\?useSSL=false\&useUnicode=true\&autoReconnect=true\&characterEncoding=UTF-8#g" /opt/bigops/config/bigops.properties
 sed -i "s#^spring.datasource.username=.*#spring.datasource.username=${dbuser}#g" /opt/bigops/config/bigops.properties
 sed -i "s#^spring.datasource.password=.*#spring.datasource.password=${dbpass}#g" /opt/bigops/config/bigops.properties
 
