@@ -29,15 +29,18 @@ if [ $? != 0 ];then
     yum -y install gcc-c++
 fi
 
-which "medusa" > /dev/null
-if [ $? != 0 ];then
-    yum -y install libssh2 openssl openssl-libs openssl-devel
-    cd /opt/bigops/install/soft/
-    tar zxvf medusa-2.2.tar.gz
-    cd medusa-2.2
-     ./configure --prefix=/usr
-    make && make install
-fi
+yum -y install openssl openssl-libs openssl-devel
+cd /opt/bigops/install/soft/
+tar zxvf libssh2-1.8.2.tar.gz
+cd libssh2-1.8.2
+./configure --prefix=/usr
+make && make install
+
+cd /opt/bigops/install/soft/
+tar zxvf medusa-2.2.tar.gz
+cd medusa-2.2
+./configure --prefix=/usr --enable-module-ssh=yes
+make && make install
 
 if [ -z "$(nmap -V|egrep 7.70)" ];then
     cd /opt/bigops/install/soft/
