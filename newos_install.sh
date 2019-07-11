@@ -2,6 +2,14 @@
 
 stty erase '^H'
 
+setenforce 0
+if [ -f /etc/sysconfig/selinux ];then
+    sed -i 's/SELINUX=.*/SELINUX=disabled/g' /etc/sysconfig/selinux
+fi
+if [ -f /etc/selinux/config ];then
+    sed -i 's/SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
+fi
+
 /bin/sh /opt/bigops/bin/check_env.sh
 
 cp -f /opt/bigops/install/yum.repos.d/* /etc/yum.repos.d/
