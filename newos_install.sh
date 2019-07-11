@@ -107,19 +107,24 @@ sed -i "s#^[ \t]*error_log.*#    error_log  /opt/ngxlog/${homeurl}.error.log;#g"
 sed -i "s#^sso.url=.*#sso.url=http://${ssourl}#g" /opt/bigops/config/bigops.properties
 sed -i "s#^home.url=.*#home.url=http://${homeurl}#g" /opt/bigops/config/bigops.properties
 
-echo -e "please input db host, default 127.0.0.1 >\c"
+echo -e "please input db host, default 127.0.0.1"
+echo -e ">\c"
 read dbhost
 
-echo -e "please input db port, default 3306 >\c"
+echo -e "please input db port, default 3306"
+echo -e ">\c"
 read dbport
 
-echo -e "please input db name, default bigops >\c"
+echo -e "please input db name, default bigops"
+echo -e ">\c"
 read dbname
 
-echo -e "please input db user, default root >\c"
+echo -e "please input db user, default root"
+echo -e ">\c"
 read dbuser
 
-echo -e "please input db pass >\c"
+echo -e "please input db pass"
+echo -e ">\c"
 read dbpass
 
 if [ -z "${dbhost}" ];then
@@ -156,14 +161,14 @@ if [ $? != 0 ];then echo "installation failed.code 1 exit";fi
 
 echo
 echo ----------------------------------
+echo 'test command'
 echo mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport}
-
+echo
 echo ----------------------------------
+
 mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} -e "create database ${dbname}" 2>/dev/null
 if [ $? != 0 ];then echo "installation failed. code 2 exit";exit;fi
 
-echo
-echo ----------------------------------
 mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} ${dbname} </opt/bigops/install/mysql/bigops-1.0.0.sql 2>/dev/null
 if [ $? != 0 ];then echo "installation failed. code 3 exit";exit;fi
 
