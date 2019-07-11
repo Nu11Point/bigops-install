@@ -151,6 +151,7 @@ echo
 echo ----------------------------------
 mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} ${dbname} </opt/bigops/install/mysql/bigops-1.0.0.sql 2>/dev/null
 if [ $? != 0 ];then echo "installation failed. code 3";fi
+echo 'Display installed database'
 mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} -e "show databases like '${dbname}'" 2>/dev/null
 if [ $? == 0 ];then
     echo
