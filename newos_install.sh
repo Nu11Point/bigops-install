@@ -152,13 +152,21 @@ sed -i "s#^spring.datasource.password=.*#spring.datasource.password=${dbpass}#g"
 echo
 echo ----------------------------------
 mysqladmin -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} drop ${dbname} 2>/dev/null
-if [ $? != 0 ];then echo "installation failed.code 1;exit";fi
+if [ $? != 0 ];then echo "installation failed.code 1 exit";fi
+
+echo
+echo ----------------------------------
+echo mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport}
+
+echo ----------------------------------
 mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} -e "create database ${dbname}" 2>/dev/null
-if [ $? != 0 ];then echo "installation failed. code 2;exit";fi
+if [ $? != 0 ];then echo "installation failed. code 2 exit";exit;fi
+
 echo
 echo ----------------------------------
 mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} ${dbname} </opt/bigops/install/mysql/bigops-1.0.0.sql 2>/dev/null
-if [ $? != 0 ];then echo "installation failed. code 3;exit";fi
+if [ $? != 0 ];then echo "installation failed. code 3 exit";exit;fi
+
 echo 'Display installed database'
 mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} -e "show databases like '${dbname}'" 2>/dev/null
 if [ $? == 0 ];then
@@ -166,5 +174,5 @@ if [ $? == 0 ];then
     echo ----------------------------------
     /bin/sh /opt/bigops/bin/restart.sh
 else
-    echo "installation failed. code 4"
+    echo "installation failed. code 4 exit"
 fi
