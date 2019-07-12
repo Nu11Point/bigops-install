@@ -29,7 +29,7 @@ inst(){
         echo
         echo ----------------------------------
         echo "Installed successfully, root@127.0.0.1 password is ${mypass}"
-        echo "please running command testing: mysql -uroot -h127.0.0.1 -p"
+        echo "please running command testing: mysql -uroot -h127.0.0.1 -p${mypass}"
         echo ----------------------------------
     else
         echo "Installed failure!"
