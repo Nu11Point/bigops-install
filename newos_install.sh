@@ -29,18 +29,32 @@ if [ $? != 0 ];then
     yum -y install gcc-c++
 fi
 
-yum -y install openssl openssl-libs openssl-devel
-cd /opt/bigops/install/soft/
-tar zxvf libssh2-1.8.2.tar.gz
-cd libssh2-1.8.2
-./configure --prefix=/usr
-make && make install
+medusainst(){
+    yum -y install openssl openssl-libs openssl-devel
+    cd /opt/bigops/install/soft/
+    tar zxvf libssh2-1.8.2.tar.gz
+    cd libssh2-1.8.2
+    ./configure --prefix=/usr
+    make && make install
+    cd /opt/bigops/install/soft/
+    tar zxvf medusa-2.2.tar.gz
+    cd medusa-2.2
+    ./configure --prefix=/usr --enable-module-ssh=yes
+    make && make install
+}
 
-cd /opt/bigops/install/soft/
-tar zxvf medusa-2.2.tar.gz
-cd medusa-2.2
-./configure --prefix=/usr --enable-module-ssh=yes
-make && make install
+which "/usr/bin/medusa" > /dev/null
+if [ $? != 0 ];then
+    medusainst
+else
+    if [ -z "$(/usr/bin/medusa -d|grep ssh.mod)" ];then
+        medusainst
+    fi
+    if [ -z "$(/usr/bin/medusa -V|egrep v2.2)" ];then
+        medusainst
+    fi
+fi
+
 
 if [ -z "$(nmap -V|egrep 7.70)" ];then
     cd /opt/bigops/install/soft/
@@ -76,6 +90,9 @@ fi
 
 cp -f /opt/bigops/config/bigops.properties.example /opt/bigops/config/bigops.properties
 
+echo
+echo
+echo ----------------------------------
 echo -e "please input sso url, default sso.bigops.com"
 echo -e ">\c"
 read ssourl
@@ -177,6 +194,7 @@ if [ $? != 0 ];then echo "installation failed. code 3 exit";exit;fi
 
 echo 'Display installed database'
 mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} -e "show databases like '${dbname}'" 2>/dev/null
+mysql -u${dbuser} -p${dbpass} -h${dbhost} -P${dbport} -e "use ${dbname};show tables like '%egistered%'" 2>/dev/null
 if [ $? == 0 ];then
     echo
     echo ----------------------------------
