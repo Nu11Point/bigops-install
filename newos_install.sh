@@ -12,7 +12,11 @@ fi
 
 /bin/sh /opt/bigops/bin/check_env.sh
 
-cp -f /opt/bigops/install/yum.repos.d/* /etc/yum.repos.d/
+wget -O /etc/yum.repos.d/CentOS-Base.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/CentOS-Base.repo
+wget -O /etc/yum.repos.d/epel.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/epel.repo
+wget -O /etc/yum.repos.d/mysql-community.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/mysql-community.repo
+wget -O /etc/yum.repos.d/nginx.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/nginx.repo
+wget -O /etc/yum.repos.d/remi.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/remi.repo
 
 which "make" > /dev/null
 if [ $? != 0 ];then
@@ -55,8 +59,7 @@ else
     fi
 fi
 
-
-if [ -z "$(nmap -V|egrep 7.70)" ];then
+if [ -z "$(/usr/bin/nmap -V|egrep 7.70)" ];then
     cd /opt/bigops/install/soft/
     tar zxvf nmap-7.70.tgz
     cd nmap-7.70
@@ -64,7 +67,7 @@ if [ -z "$(nmap -V|egrep 7.70)" ];then
     make && make install
 fi
 
-which "ansible" > /dev/null
+which "/usr/bin/ansible" > /dev/null
 if [ $? != 0 ];then
     yum -y install ansible
 fi
@@ -79,7 +82,7 @@ else
 fi
 chmod 777 /usr/bin/jq
 
-which "nginx" > /dev/null
+which "/usr/sbin/nginx" > /dev/null
 if [ $? != 0 ];then
     yum -y install nginx
 fi
@@ -87,6 +90,12 @@ fi
 if [ ! -d /opt/ngxlog/ ];then
     mkdir /opt/ngxlog
 fi
+
+wget -O /etc/nginx/nginx.conf https://raw.githubusercontent.com/yunweibang/bigops-config/master/nginx/nginx.conf
+wget -O /etc/nginx/conf.d/default.conf https://raw.githubusercontent.com/yunweibang/bigops-config/master/nginx/conf.d/default.conf
+wget -O /etc/nginx/conf.d/sso.conf https://raw.githubusercontent.com/yunweibang/bigops-config/master/nginx/conf.d/sso.conf
+wget -O /etc/nginx/conf.d/work.conf https://raw.githubusercontent.com/yunweibang/bigops-config/master/nginx/conf.d/work.conf
+wget -O /etc/nginx/conf.d/zabbix.conf https://raw.githubusercontent.com/yunweibang/bigops-config/master/nginx/conf.d/zabbix.conf
 
 cp -f /opt/bigops/config/bigops.properties.example /opt/bigops/config/bigops.properties
 
@@ -109,11 +118,6 @@ if [ -z "${homeurl}" ];then
     homeurl='work.bigops.com'
 fi
 
-cp -f /opt/bigops/install/lnmp_conf/nginx.conf /etc/nginx/nginx.conf
-cp -f /opt/bigops/install/lnmp_conf/conf.d/default.conf /etc/nginx/conf.d/default.conf
-cp -f /opt/bigops/install/lnmp_conf/conf.d/sso.conf /etc/nginx/conf.d/sso.conf
-cp -f /opt/bigops/install/lnmp_conf/conf.d/work.conf /etc/nginx/conf.d/work.conf
-cp -f /opt/bigops/install/lnmp_conf/conf.d/zabbix.conf /etc/nginx/conf.d/zabbix.conf
 
 sed -i "s#^[ \t]*server_name.*#    server_name ${ssourl};#g" /etc/nginx/conf.d/sso.conf
 sed -i "s#^[ \t]*server_name.*#    server_name ${homeurl};#g" /etc/nginx/conf.d/work.conf

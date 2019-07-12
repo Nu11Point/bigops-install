@@ -5,12 +5,12 @@ if [ ! -z "$(ps aux|egrep -v egrep|egrep mysqld)" ];then
    ps aux|egrep -v egrep|egrep mysqld|awk '{print $2}'|xargs kill -9
 fi
 
-if [ ! -d /opt/mysqlsoft ];then
-   mkdir /opt/mysqlsoft
+if [ ! -d /opt/mysql-rpms ];then
+   mkdir /opt/mysql-rpms
 fi
 
 inst(){
-    wget -O /etc/my.cnf https://raw.githubusercontent.com/yunweibang/bigops-LNMP-config/master/mysql/my-8.cnf
+    wget -O /etc/my.cnf https://raw.githubusercontent.com/yunweibang/bigops-config/master/mysql/my-8.cnf
     chmod 644 /etc/my.cnf
     rm -rf /var/lib/mysql/*
     mysqld --user=mysql --lower-case-table-names=0 --initialize-insecure
@@ -46,7 +46,7 @@ if [[ "${osver}" == 6 ]] && [[ `arch` == x86_64 ]];then
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-devel-8.0.16-2.el6.x86_64.rpm &
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-libs-8.0.16-2.el6.x86_64.rpm &
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-libs-compat-8.0.16-2.el6.x86_64.rpm &
-    rpm -Uvh --force /opt/mysqlsoft/mysql*.el6*.rpm   
+    rpm -Uvh --force /opt/mysql-rpms/mysql*.el6*.rpm   
     inst
 elif [[ "${osver}" == 7 ]] && [[ `arch` == x86_64 ]];then
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-server-8.0.16-2.el7.x86_64.rpm &
@@ -55,7 +55,7 @@ elif [[ "${osver}" == 7 ]] && [[ `arch` == x86_64 ]];then
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-devel-8.0.16-2.el7.x86_64.rpm &
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-libs-8.0.16-2.el7.x86_64.rpm &
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-libs-compat-8.0.16-2.el7.x86_64.rpm &
-    rpm -Uvh --force /opt/mysqlsoft/mysql*.el7*.rpm
+    rpm -Uvh --force /opt/mysql-rpms/mysql*.el7*.rpm
     inst
 else
     echo "current system is not supported"
