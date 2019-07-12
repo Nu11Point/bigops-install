@@ -24,6 +24,7 @@ inst(){
     if  [ -z  "${mypass}" ];then
         mypass='bigops'
     fi
+
     mysql -uroot -e "grant all privileges on *.* to 'root'@'127.0.0.1' identified with mysql_native_password by '${mypass}'"
     if [ $? == 0 ];then
         echo
@@ -34,6 +35,7 @@ inst(){
     else
         echo "Installed failure!"
     fi
+
 }
 
 osver=`rpm -qi centos-release|egrep -i version|awk '{print $3}'`
