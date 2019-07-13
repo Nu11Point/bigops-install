@@ -38,7 +38,7 @@ inst(){
 
 }
 
-osver=`rpm -qi centos-release|egrep -i version|awk '{print $3}'`
+osver=`rpm -qi centos-release|egrep Version|awk '{print $3}'`
 if [[ "${osver}" == 6 ]] && [[ `arch` == x86_64 ]];then
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-server-8.0.16-2.el6.x86_64.rpm &
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-client-8.0.16-2.el6.x86_64.rpm &

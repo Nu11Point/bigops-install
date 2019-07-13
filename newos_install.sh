@@ -67,6 +67,7 @@ if [ -z "$(/usr/bin/nmap -V|egrep 7.70)" ];then
     make && make install
 fi
 
+yum -y update openssh-clients
 which "/usr/bin/ansible" > /dev/null
 if [ $? != 0 ];then
     yum -y install ansible
