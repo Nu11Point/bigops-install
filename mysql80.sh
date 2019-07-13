@@ -22,6 +22,7 @@ inst(){
     echo -e "please input root@127.0.0.1 password, default bigops"
     echo -e ">\c"
     read mypass
+    
     if  [ -z "${mypass}" ];then
         echo ----------------------------------
         echo -e "please input root@127.0.0.1 password, default bigops"
