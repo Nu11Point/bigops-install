@@ -45,7 +45,7 @@ if [[ "${osver}" == 6 ]] && [[ `arch` == x86_64 ]];then
     wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-devel-5.7.26-1.el6.x86_64.rpm &
     wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-libs-5.7.26-1.el6.x86_64.rpm &
     wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-libs-compat-5.7.26-1.el6.x86_64.rpm &
-    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server-5.7.26-1.el6.x86_64.rpm &
+    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server-5.7.26-1.el6.x86_64.rpm
     rm -f /etc/init.d/mysqld
     rpm -Uvh --force /opt/mysql-rpms/mysql*.el6*.rpm   
     inst
@@ -55,7 +55,7 @@ elif [[ "${osver}" == 7 ]] && [[ `arch` == x86_64 ]];then
     wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-devel-5.7.26-1.el7.x86_64.rpm &
     wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-libs-5.7.26-1.el7.x86_64.rpm &
     wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-libs-compat-5.7.26-1.el7.x86_64.rpm &
-    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server-5.7.26-1.el7.x86_64.rpm &
+    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server-5.7.26-1.el7.x86_64.rpm
     rpm -Uvh --force /opt/mysql-rpms/mysql*.el7*.rpm
     inst
 else
