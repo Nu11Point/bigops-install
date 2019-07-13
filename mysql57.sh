@@ -41,22 +41,22 @@ inst(){
 osver=`rpm -qi centos-release|egrep Version|awk '{print $3}'`
 cd /opt/mysql-rpms/
 if [[ "${osver}" == 6 ]] && [[ `arch` == x86_64 ]];then
-    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-client-5.7.26-1.el6.x86_64.rpm &
-    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-common-5.7.26-1.el6.x86_64.rpm &
-    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-devel-5.7.26-1.el6.x86_64.rpm &
-    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-libs-5.7.26-1.el6.x86_64.rpm &
-    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-libs-compat-5.7.26-1.el6.x86_64.rpm &
-    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server-5.7.26-1.el6.x86_64.rpm
+    wget -N -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-client-5.7.26-1.el6.x86_64.rpm &
+    wget -N -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-common-5.7.26-1.el6.x86_64.rpm &
+    wget -N -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-devel-5.7.26-1.el6.x86_64.rpm &
+    wget -N -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-libs-5.7.26-1.el6.x86_64.rpm &
+    wget -N -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-libs-compat-5.7.26-1.el6.x86_64.rpm &
+    wget -N -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server-5.7.26-1.el6.x86_64.rpm
     rm -f /etc/init.d/mysqld
     rpm -Uvh --force /opt/mysql-rpms/*-5.7*.el6.*.rpm   
     inst
 elif [[ "${osver}" == 7 ]] && [[ `arch` == x86_64 ]];then
-    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-client-5.7.26-1.el7.x86_64.rpm &
-    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-common-5.7.26-1.el7.x86_64.rpm &
-    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-devel-5.7.26-1.el7.x86_64.rpm &
-    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-libs-5.7.26-1.el7.x86_64.rpm &
-    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-libs-compat-5.7.26-1.el7.x86_64.rpm &
-    wget -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server-5.7.26-1.el7.x86_64.rpm
+    wget -N -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-client-5.7.26-1.el7.x86_64.rpm &
+    wget -N -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-common-5.7.26-1.el7.x86_64.rpm &
+    wget -N -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-devel-5.7.26-1.el7.x86_64.rpm &
+    wget -N -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-libs-5.7.26-1.el7.x86_64.rpm &
+    wget -N -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-libs-compat-5.7.26-1.el7.x86_64.rpm &
+    wget -N -c https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-community-server-5.7.26-1.el7.x86_64.rpm
     rpm -Uvh --force /opt/mysql-rpms/*-5.7*.el7.*.rpm
     inst
 else
