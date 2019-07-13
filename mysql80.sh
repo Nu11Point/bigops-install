@@ -26,7 +26,8 @@ inst(){
         mypass='bigops'
     fi
 
-    mysql -uroot -e "grant all privileges on *.* to 'root'@'127.0.0.1' identified with mysql_native_password by '${mypass}'"
+    mysql -uroot -e "create user 'root'@'127.0.0.1' identified with mysql_native_password by '${mypass}'"
+    mysql -uroot -e "grant all privileges on *.* to 'root'@'127.0.0.1'"
     if [ $? == 0 ];then
         echo
         echo ----------------------------------
