@@ -10,7 +10,7 @@ if [ ! -d /opt/mysql-rpms ];then
 fi
 
 inst(){
-    wget -O /etc/my.cnf https://raw.githubusercontent.com/yunweibang/bigops-config/master/mysql/my-8.cnf
+    wget -O /etc/my.cnf https://raw.githubusercontent.com/yunweibang/bigops-config/master/mysql/my-80.cnf
     chmod 644 /etc/my.cnf
     rm -rf /var/lib/mysql/*
     mysqld --user=mysql --lower-case-table-names=0 --initialize-insecure
