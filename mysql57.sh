@@ -15,7 +15,8 @@ inst(){
     rm -rf /var/lib/mysql/*
     mysqld --user=mysql --lower-case-table-names=0 --initialize-insecure
     chown -R mysql:mysql /var/lib/mysql
-    service mysqld start
+    systemctl restart mysqld.service
+    service mysqld restart
     echo
     echo ----------------------------------
     echo -e "please input root@127.0.0.1 password, default bigops"
