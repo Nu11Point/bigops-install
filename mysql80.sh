@@ -22,10 +22,23 @@ inst(){
     echo -e "please input root@127.0.0.1 password, default bigops"
     echo -e ">\c"
     read mypass
-    if  [ -z  "${mypass}" ];then
-        mypass='bigops'
+    if  [ -z "${mypass}" ];then
+        echo ----------------------------------
+        echo -e "please input root@127.0.0.1 password, default bigops"
+        echo -e ">\c"
+        read mypass
     fi
 
+    if  [ -z "${mypass}" ];then
+        echo ----------------------------------
+        echo -e "please input root@127.0.0.1 password, default bigops"
+        echo -e ">\c"
+        read mypass
+    fi
+
+    if  [ -z "${mypass}" ];then
+        mypass='bigops'
+    fi
     mysql -uroot -e "create user 'root'@'127.0.0.1' identified with mysql_native_password by '${mypass}'"
     mysql -uroot -e "grant all privileges on *.* to 'root'@'127.0.0.1'"
     if [ $? == 0 ];then
