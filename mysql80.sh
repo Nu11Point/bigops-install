@@ -6,7 +6,7 @@ if [ ! -z "$(ps aux|egrep -v egrep|egrep mysqld)" ];then
 fi
 
 if [ ! -d /opt/mysql-rpms ];then
-   mkdir /opt/mysql-rpms
+   mkdir -p /opt/mysql-rpms
 fi
 
 inst(){
@@ -46,7 +46,7 @@ if [[ "${osver}" == 6 ]] && [[ `arch` == x86_64 ]];then
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-libs-8.0.16-2.el6.x86_64.rpm &
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-libs-compat-8.0.16-2.el6.x86_64.rpm &
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-server-8.0.16-2.el6.x86_64.rpm
-    rpm -Uvh --force /opt/mysql-rpms/mysql*.el6*.rpm   
+    rpm -Uvh --force /opt/mysql-rpms/*-8.0*.el6.*.rpm   
     inst
 elif [[ "${osver}" == 7 ]] && [[ `arch` == x86_64 ]];then
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-client-8.0.16-2.el7.x86_64.rpm &
@@ -55,7 +55,7 @@ elif [[ "${osver}" == 7 ]] && [[ `arch` == x86_64 ]];then
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-libs-8.0.16-2.el7.x86_64.rpm &
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-libs-compat-8.0.16-2.el7.x86_64.rpm &
     wget -c https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-server-8.0.16-2.el7.x86_64.rpm
-    rpm -Uvh --force /opt/mysql-rpms/mysql*.el7*.rpm
+    rpm -Uvh --force /opt/mysql-rpms/*-8.0*.el7.*.rpm
     inst
 else
     echo "current system is not supported"
