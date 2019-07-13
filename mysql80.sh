@@ -17,6 +17,10 @@ inst(){
     chown -R mysql:mysql /var/lib/mysql
     systemctl restart mysqld.service
     service mysqld restart
+
+    echo "press any key to continue"
+    read
+
     echo
     echo ----------------------------------
     echo -e "please input root@127.0.0.1 password, default bigops"
