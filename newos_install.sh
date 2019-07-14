@@ -33,7 +33,7 @@ medusainst(){
     make && make install
 }
 
-which "/usr/bin/medusa" > /dev/null
+which "/usr/bin/medusa" >/dev/null 2>&1
 if [ $? != 0 ];then
     medusainst
 else

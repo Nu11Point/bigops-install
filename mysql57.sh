@@ -1,10 +1,10 @@
 #!/bin/sh
 
-which "/usr/bin/systemctl" > /dev/null
-if [ $? != 0 ];then
-    service mysqld stop
-else
+which "/usr/bin/systemctl" >/dev/null 2>&1
+if [ $? == 0 ];then
     systemctl stop mysqld.service
+else
+    service mysqld stop
 fi
 
 if [ ! -z "$(ps aux|egrep mysqld|egrep -v egrep)" ];then 
@@ -22,11 +22,11 @@ inst(){
     mysqld --user=mysql --lower-case-table-names=0 --initialize-insecure
     chown -R mysql:mysql /var/lib/mysql
 
-    which "/usr/bin/systemctl" > /dev/null
-    if [ $? != 0 ];then
-        service mysqld restart
+    which "/usr/bin/systemctl" >/dev/null 2>&1
+    if [ $? == 0 ];then
+        systemctl start mysqld.service
     else
-        systemctl restart mysqld.service
+        service mysqld start
     fi
 
     echo
