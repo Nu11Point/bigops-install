@@ -14,27 +14,13 @@ fi
 
 wget -O /etc/yum.repos.d/CentOS-Base.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/CentOS-Base.repo
 wget -O /etc/yum.repos.d/epel.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/epel.repo
-wget -O /etc/yum.repos.d/mysql-community.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/mysql-community.repo
 wget -O /etc/yum.repos.d/nginx.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/nginx.repo
 wget -O /etc/yum.repos.d/remi.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/remi.repo
 
-which "make" > /dev/null
-if [ $? != 0 ];then
-    yum -y install make
-fi
-
-which "gcc" > /dev/null
-if [ $? != 0 ];then
-    yum -y install gcc
-fi
-
-which "g++" > /dev/null
-if [ $? != 0 ];then
-    yum -y install gcc-c++
-fi
+yum -y install nginx ansible openssl openssl-libs openssl-devel make gcc gcc-c++ pam-devel zlib-devel openssl-devel \
+apr-devel apr apr-util subversion-devel subversion freerdp-devel freerdp libssh2-devel libssh2
 
 medusainst(){
-    yum -y install openssl openssl-libs openssl-devel
     cd /opt/bigops/install/soft/
     tar zxvf libssh2-1.8.2.tar.gz
     cd libssh2-1.8.2
@@ -67,11 +53,6 @@ if [ -z "$(/usr/bin/nmap -V|egrep 7.70)" ];then
     make && make install
 fi
 
-yum -y update openssh-clients
-which "/usr/bin/ansible" > /dev/null
-if [ $? != 0 ];then
-    yum -y install ansible
-fi
 cp -f /opt/bigops/install/ansible.cfg /root/.ansible.cfg
 sed -i 's/^[ ]*StrictHostKeyChecking.*/StrictHostKeyChecking no/g' /etc/ssh/ssh_config
 
@@ -82,11 +63,6 @@ else
     cp -f /opt/bigops/install/soft/jq-linux64 /usr/bin/jq
 fi
 chmod 777 /usr/bin/jq
-
-which "/usr/sbin/nginx" > /dev/null
-if [ $? != 0 ];then
-    yum -y install nginx
-fi
 
 if [ ! -d /opt/ngxlog/ ];then
     mkdir /opt/ngxlog
@@ -100,7 +76,6 @@ wget -O /etc/nginx/conf.d/zabbix.conf https://raw.githubusercontent.com/yunweiba
 
 cp -f /opt/bigops/config/bigops.properties.example /opt/bigops/config/bigops.properties
 
-echo
 echo
 echo ----------------------------------
 echo -e "please input sso url, default sso.bigops.com"
@@ -118,7 +93,6 @@ homeurl=`echo "${homeurl}"|sed 's/^[ ]*//g'|sed 's/[ ]*$//g'`
 if [ -z "${homeurl}" ];then
     homeurl='work.bigops.com'
 fi
-
 
 sed -i "s#^[ \t]*server_name.*#    server_name ${ssourl};#g" /etc/nginx/conf.d/sso.conf
 sed -i "s#^[ \t]*server_name.*#    server_name ${homeurl};#g" /etc/nginx/conf.d/work.conf

@@ -1,8 +1,14 @@
 #!/bin/sh
 
-service mysqld stop
-if [ ! -z "$(ps aux|egrep -v egrep|egrep mysqld)" ];then 
-   ps aux|egrep -v egrep|egrep mysqld|awk '{print $2}'|xargs kill -9
+which "/usr/bin/systemctl" > /dev/null
+if [ $? != 0 ];then
+    service mysqld stop
+else
+    systemctl stop mysqld.service
+fi
+
+if [ ! -z "$(ps aux|egrep mysqld|egrep -v egrep)" ];then 
+   ps aux|egrep mysqld|egrep -v egrep|awk '{print $2}'|xargs kill -9
 fi
 
 if [ ! -d /opt/mysql-rpms ];then
@@ -15,13 +21,19 @@ inst(){
     rm -rf /var/lib/mysql/*
     mysqld --user=mysql --lower-case-table-names=0 --initialize-insecure
     chown -R mysql:mysql /var/lib/mysql
-    systemctl restart mysqld.service
-    service mysqld restart
 
+    which "/usr/bin/systemctl" > /dev/null
+    if [ $? != 0 ];then
+        service mysqld restart
+    else
+        systemctl restart mysqld.service
+    fi
+
+    echo
+    echo ----------------------------------
     echo "press any key to continue"
     read
 
-    echo
     echo ----------------------------------
     echo -e "please input root@127.0.0.1 password, default bigops"
     echo -e ">\c"
