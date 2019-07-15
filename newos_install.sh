@@ -22,6 +22,7 @@ apr-devel apr apr-util subversion-devel subversion freerdp-devel freerdp libssh2
 
 medusainst(){
     cd /opt/bigops/install/soft/
+    #wget -c https://www.libssh2.org/download/libssh2-1.8.2.tar.gz
     tar zxvf libssh2-1.8.2.tar.gz
     cd libssh2-1.8.2
     ./configure --prefix=/usr

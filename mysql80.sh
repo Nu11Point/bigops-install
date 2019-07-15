@@ -7,8 +7,8 @@ else
     service mysqld stop
 fi
 
-if [ ! -z "$(ps aux|egrep mysqld|egrep -v egrep)" ];then 
-   ps aux|egrep mysqld|egrep -v egrep|awk '{print $2}'|xargs kill -9
+if [ ! -z "$(ps aux|egrep mysqld|grep -v grep)" ];then 
+   ps aux|egrep mysqld|grep -v grep|awk '{print $2}'|xargs kill -9
 fi
 
 if [ ! -d /opt/mysql-rpms ];then
