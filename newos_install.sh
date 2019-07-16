@@ -41,12 +41,12 @@ else
     if [ -z "$(/usr/bin/medusa -d|grep ssh.mod)" ];then
         medusainst
     fi
-    if [ -z "$(/usr/bin/medusa -V|egrep v2.2)" ];then
+    if [ -z "$(/usr/bin/medusa -V|grep v2.2)" ];then
         medusainst
     fi
 fi
 
-if [ -z "$(/usr/bin/nmap -V|egrep 7.70)" ];then
+if [ -z "$(/usr/bin/nmap -V|grep 7.70)" ];then
     cd /opt/bigops/install/soft/
     tar zxvf nmap-7.70.tgz
     cd nmap-7.70
