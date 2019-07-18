@@ -16,6 +16,10 @@ if [ ! -d /opt/mysql-rpms ];then
 fi
 
 inst(){
+    if [ ! -f /usr/sbin/mysqld ];then
+        echo "not found /usr/sbin/mysqld, installation failed"
+        exit
+    fi
     wget -O /etc/my.cnf https://raw.githubusercontent.com/yunweibang/bigops-config/master/mysql/my-80.cnf
     chmod 644 /etc/my.cnf
     rm -rf /var/lib/mysql/*
