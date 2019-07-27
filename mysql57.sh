@@ -2,7 +2,7 @@
 
 yum -y install net-tools numactl pkgconfig perl perl-DBI perl-Compress-Raw-Bzip2 perl-Net-Daemon
 yum -y install perl-Module-Pluggable perl-Pod-Escapes perl-Pod-Simple perl-libs perl-version
-yum -y install perl-parent perl-Pod-Escapes perl-Pod-Simple perl-Time-HiRes perl-libs
+yum -y install perl-parent perl-Pod-Escapes perl-Pod-Simple perl-Time-HiRes perl-libs openssl-devel openssl
 
 which "/usr/bin/systemctl" >/dev/null 2>&1
 if [ $? == 0 ];then
