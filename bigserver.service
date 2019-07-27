@@ -1,0 +1,15 @@
+[Unit]
+Description=bigserver
+After=bigserver.service
+  
+[Service]
+Type=forking
+User=root
+Group=root
+ExecStart=/opt/bigops/bin/bigserver.sh start
+ExecReload=
+ExecStop=/opt/bigops/bin/bigserver.sh stop
+PrivateTmp=true
+  
+[Install]
+WantedBy=multi-user.target

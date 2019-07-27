@@ -1,0 +1,15 @@
+[Unit]
+Description=bigweb
+After=bigweb.service
+  
+[Service]
+Type=forking
+User=root
+Group=root
+ExecStart=/opt/bigops/bin/bigweb.sh start
+ExecReload=
+ExecStop=/opt/bigops/bin/bigweb.sh stop
+PrivateTmp=true
+  
+[Install]
+WantedBy=multi-user.target
