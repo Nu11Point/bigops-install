@@ -3,34 +3,25 @@
 # chkconfig: 345 11 98
 # description: bigserver
 
-# Source function library.
-. /etc/rc.d/init.d/functions
-
-start()
-{
-    echo -n $"Starting bigserver: "
-    /bin/sh /opt/bigops/bin/bigserver.sh start
-}
-
-stop()
-{
-    echo -n $"Shutting down bigserver: "
-    /bin/sh /opt/bigops/bin/bigserver.sh stop
-}
-
-restart()
-{
-    stop
-    start
-}
-
 case "$1" in
-    start|stop|restart)
-        $1
+  start)
+        echo -n $"Starting bigserver: ......"
+        /bin/sh /opt/bigops/bin/bigserver.sh start >/dev/null 2>&1
+        echo
         ;;
-    *)
-	echo $"Usage: $0 {start|stop|restart}"
-	exit 2
-	;;
+  stop)
+        echo -n $"Shutting down bigserver: ......"
+        /bin/sh /opt/bigops/bin/bigserver.sh stop >/dev/null 2>&1
+        echo
+        ;;
+  restart)
+        cd "$CWD"
+        $0 stop
+        $0 start
+        rc=$?
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart}"
+        exit 2
 esac
 
