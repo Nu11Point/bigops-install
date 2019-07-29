@@ -26,7 +26,18 @@ inst(){
     fi
     wget -O /etc/my.cnf https://raw.githubusercontent.com/yunweibang/bigops-config/master/mysql/my-57.cnf
     chmod 644 /etc/my.cnf
-    rm -rf /var/lib/mysql/*
+
+    echo -e "Confirm delete database datadir: /var/lib/mysql/ , (y/n)?"
+    echo -e ">\c"
+    read sure
+
+    if [ "$sure" == 'y' ];then
+        rm -rf /var/lib/mysql/*     
+    else
+        echo "exit install"
+        exit
+    fi
+
     mysqld --user=mysql --lower-case-table-names=0 --initialize-insecure
     chown -R mysql:mysql /var/lib/mysql
 
