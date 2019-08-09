@@ -39,6 +39,12 @@ inst(){
         exit
     fi
 
+    if [ ! -e /var/lib/mysql-files ];then
+        mkdir /var/lib/mysql-files
+    fi
+    chmod 777 /var/lib/mysql-files
+    chown -R mysql:mysql /var/lib/mysql
+
     mysqld --user=mysql --lower-case-table-names=0 --initialize-insecure
     chown -R mysql:mysql /var/lib/mysql
     
