@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# chkconfig: 345 11 98
+# chkconfig: 345 11 90
 # description: bigserver
 
 case "$1" in
