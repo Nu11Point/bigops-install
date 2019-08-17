@@ -105,9 +105,10 @@ if [ -z "$(grep ntpdate /var/spool/cron/root)" ];then
     echo '* */6 * * * /usr/sbin/ntpdate -u pool.ntp.org && /sbin/hwclock --systohc > /dev/null 2>&1'>>/var/spool/cron/root
 fi
 
-if [ -d /var/spool/postfix/maildrop/ ];then
-    if [ -z "$(grep /var/spool/postfix/maildrop/ /var/spool/cron/root)" ];then
-        echo '* */6 * * * /usr/bin/find /var/spool/postfix/maildrop/ -type f |xargs rm -f > /dev/null 2>&1'>>/var/spool/cron/root
+wget -O /bin/clean_mail.sh https://raw.githubusercontent.com/yunweibang/bigops-install/master/clean_mail.sh
+if [ -f /bin/clean_mail.sh ];then
+    if [ -z "$(grep /bin/clean_mail.sh /var/spool/cron/root)" ];then
+        echo '* */6 * * * /bin/sh /bin/clean_mail.sh > /dev/null 2>&1'>>/var/spool/cron/root
     fi
 fi
 
