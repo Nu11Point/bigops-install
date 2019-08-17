@@ -102,7 +102,13 @@ sed -i '/ \/ .* defaults /s/defaults/defaults,noatime,nodiratime,nobarrier/g' /e
 cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 if [ -z "$(grep ntpdate /var/spool/cron/root)" ];then
-    echo '* */2 * * * /usr/sbin/ntpdate -u pool.ntp.org && /sbin/hwclock --systohc > /dev/null 2>&1'>>/var/spool/cron/root
+    echo '* */6 * * * /usr/sbin/ntpdate -u pool.ntp.org && /sbin/hwclock --systohc > /dev/null 2>&1'>>/var/spool/cron/root
+fi
+
+if [ -d /var/spool/postfix/maildrop/ ];then
+    if [ -z "$(grep /var/spool/postfix/maildrop/ /var/spool/cron/root)" ];then
+        echo '* */6 * * * /usr/bin/find /var/spool/postfix/maildrop/ -type f |xargs rm -f > /dev/null 2>&1'>>/var/spool/cron/root
+    fi
 fi
 
 for i in $(ls /sys/class/net|egrep -v 'lo|usb') ; do ethtool -K $i rx off; done
@@ -118,6 +124,10 @@ if [ -z "$(egrep JAVA_HOME /etc/profile)" ];then
    echo 'export JAVA_HOME=/usr/lib/jvm/java'>>/etc/profile
    echo 'export PATH=$PATH:$JAVA_HOME/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib64:/lib64'>>/etc/profile
    echo 'export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar'>>/etc/profile
+fi
+
+if [ -z "$(egrep MAILCHECK /etc/profile)" ];then
+    echo 'unset MAILCHECK'>>/etc/profile
 fi
 
 source /etc/profile
