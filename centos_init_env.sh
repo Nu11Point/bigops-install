@@ -68,18 +68,18 @@ else
     for i in $(ls /etc/rc3.d/S*|cut -c 15-|egrep -v local);do
         chkconfig --level 345 $i off
     done
-    chkconfig --level 345 elasticsearch
-    chkconfig --level 345 bigserver
-    chkconfig --level 345 bigweb
-    chkconfig --level 345 gitlab-runner
-    chkconfig --level 345 gitlab-runsvdir
-    chkconfig --level 345 kibana
-    chkconfig --level 345 mysqld
-    chkconfig --level 345 nginx
-    chkconfig --level 345 php-fpm
-    chkconfig --level 345 postfix
-    chkconfig --level 345 zabbix-agent
-    chkconfig --level 345zabbix-server
+    chkconfig --level 345 elasticsearch on
+    chkconfig --level 345 bigserver on
+    chkconfig --level 345 bigweb on
+    chkconfig --level 345 gitlab-runner on
+    chkconfig --level 345 gitlab-runsvdir on
+    chkconfig --level 345 kibana on
+    chkconfig --level 345 mysqld on
+    chkconfig --level 345 nginx on
+    chkconfig --level 345 php-fpm on
+    chkconfig --level 345 postfix on
+    chkconfig --level 345 zabbix-agent on
+    chkconfig --level 345zabbix-server on
 
     chkconfig --level 345 sysstat on
     chkconfig --level 345 network on
