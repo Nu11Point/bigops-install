@@ -79,7 +79,7 @@ else
     chkconfig --level 345 php-fpm on
     chkconfig --level 345 postfix on
     chkconfig --level 345 zabbix-agent on
-    chkconfig --level 345zabbix-server on
+    chkconfig --level 345 zabbix-server on
 
     chkconfig --level 345 sysstat on
     chkconfig --level 345 network on
