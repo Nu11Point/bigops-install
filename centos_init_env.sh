@@ -289,7 +289,7 @@ if [ -z "$(/usr/bin/nmap -V|grep 7.70)" ];then
     make && make install
 fi
 
-wget -O /usr/bin/jq https://github.com/yunweibang/bigops-install/raw/master/soft/jq
+wget -O /usr/bin/jq https://github.com/yunweibang/bigops-install/raw/master/soft/jq-linux64
 chmod 777 /usr/bin/jq
 
 if [ ! -d /opt/ngxlog/ ];then
