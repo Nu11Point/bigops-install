@@ -20,6 +20,12 @@ fi
 
 yum -y install wget
 wget -O /etc/yum.repos.d/CentOS-Base.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/CentOS-Base.repo
+if [ $? != 0 ];then
+    echo ---------------------------------
+    echo "cannot access raw.githubusercontent.com"
+    echo ---------------------------------
+    exit
+fi
 wget -O /etc/yum.repos.d/epel.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/epel.repo
 wget -O /etc/yum.repos.d/remi.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/remi.repo
 wget -O /etc/yum.repos.d/nginx.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/nginx.repo
@@ -184,6 +190,8 @@ if [ $? != 0 ];then
     fi
 fi
 
+sed -i 's/^[ ]*StrictHostKeyChecking.*/StrictHostKeyChecking no/g' /etc/ssh/ssh_config
+
 export JAVA_HOME=/usr/lib/jvm/java
 export PATH=$PATH:$JAVA_HOME/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib64:/lib64
 export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
@@ -224,4 +232,66 @@ if [ ! -f /usr/local/apr/lib/libtcnative-1.a ];then
     cd tomcat-native-1.2.23-src/native/
     ./configure --with-apr=/usr/local/apr --with-java-home=/usr/lib/jvm/java
     make && make install
+fi
+
+medusainst(){
+    cd ~
+    if [ ! -e libssh2-1.8.2.tar.gz ];then
+        wget -c https://github.com/yunweibang/bigops-install/raw/master/soft/libssh2-1.8.2.tar.gz
+    fi
+    if [ -d libssh2-1.8.2 ];then
+        rm -rf libssh2-1.8.2
+    fi
+    tar zxvf libssh2-1.8.2.tar.gz
+    cd libssh2-1.8.2
+    ./configure --prefix=/usr
+    make clean
+    make && make install
+
+    cd ~
+    if [ ! -e medusa-2.2.tar.gz ];then
+        wget -c https://github.com/yunweibang/bigops-install/raw/master/soft/medusa-2.2.tar.gz
+    fi
+    if [ -d medusa-2.2 ];then
+        rm -rf medusa-2.2
+    fi
+    tar zxvf medusa-2.2.tar.gz
+    cd medusa-2.2
+    ./configure --prefix=/usr --enable-module-ssh=yes
+    make clean
+    make && make install
+}
+
+which "/usr/bin/medusa" >/dev/null 2>&1
+if [ $? != 0 ];then
+    medusainst
+else
+    if [ -z "$(/usr/bin/medusa -d|grep ssh.mod)" ];then
+        medusainst
+    fi
+    if [ -z "$(/usr/bin/medusa -V|grep v2.2)" ];then
+        medusainst
+    fi
+fi
+
+if [ -z "$(/usr/bin/nmap -V|grep 7.70)" ];then
+    cd ~
+    if [ ! -e nmap-7.70.tgz ];then
+        wget -c https://github.com/yunweibang/bigops-install/raw/master/soft/nmap-7.70.tgz
+    fi
+    if [ -d nmap-7.70 ];then
+        rm -rf nmap-7.70
+    fi
+    tar zxvf nmap-7.70.tgz
+    cd nmap-7.70
+    ./configure --prefix=/usr
+    make clean
+    make && make install
+fi
+
+wget -O /usr/bin/jq https://github.com/yunweibang/bigops-install/raw/master/soft/jq
+chmod 777 /usr/bin/jq
+
+if [ ! -d /opt/ngxlog/ ];then
+    mkdir /opt/ngxlog
 fi
