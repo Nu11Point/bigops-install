@@ -131,47 +131,46 @@ if [ $? != 0 ];then
     service xinetd start
     mv /etc/securetty /etc/securetty.bak
     cd ~
-    if [ ! -e openssl-1.0.2s.tar.gz ];then
-        wget -c https://www.openssl.org/source/openssl-1.0.2s.tar.gz
+    if [ -z "$(openssl version|egrep 1.0.2s)" ];then
+        if [ ! -e openssl-1.0.2s.tar.gz ];then
+            wget -c https://www.openssl.org/source/openssl-1.0.2s.tar.gz
+        fi
+        if [ -d openssl-1.0.2s ];then
+            rm -rf openssl-1.0.2s
+        fi
+        tar zxvf openssl-1.0.2s.tar.gz
+        cd openssl-1.0.2s
+        ./config --prefix=/usr shared zlib
+        make clean
+        make && make install
     fi
-    if [ -d openssl-1.0.2s ];then
-        rm -rf openssl-1.0.2s
-    fi
-    tar zxvf openssl-1.0.2s.tar.gz
-    cd openssl-1.0.2s
-    ./config --prefix=/usr shared zlib
-    make clean
-    make && make install
 
     cd ~
-    if [ ! -e openssh-8.0p1.tar.gz ];then
-        wget -c https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-8.0p1.tar.gz
+    if [ -z "$(strings /usr/sbin/sshd | grep OpenSSH_8.0p1)" ];then
+        if [ ! -e openssh-8.0p1.tar.gz ];then
+            wget -c https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-8.0p1.tar.gz
+        fi
+        if [ -d openssh-8.0p1 ];then
+            rm -rf openssh-8.0p1
+        fi
+        tar zxvf openssh-8.0p1.tar.gz
+        cd openssh-8.0p1
+        chmod -R 0600 /etc/ssh/
+        ./configure --prefix=/usr --sysconfdir=/etc/ssh --with-pam --with-zlib --with-md5-passwords --without-openssl-header-check
+        make clean
+        make && make install
+        cp -f ssh_config /etc/ssh/ssh_config
+        echo 'StrictHostKeyChecking no' >>/etc/ssh/ssh_config
+        echo 'UserKnownHostsFile=/dev/null'>>/etc/ssh/ssh_config
+        cp -f sshd_config /etc/ssh/sshd_config
+        sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
+        sed -i 's/^GSSAPIAuthentication/#GSSAPIAuthentication no/g' /etc/ssh/sshd_config
+        sed -i 's/^GSSAPICleanupCredentials/#GSSAPICleanupCredentials no/g' /etc/ssh/sshd_config
+        if [ ! -z $(/usr/sbin/sshd -t -f /etc/ssh/sshd_config) ];then
+            echo 'error, please run /usr/sbin/sshd -t -f /etc/ssh/sshd_config'
+            exit
+        fi
     fi
-    if [ -d openssh-8.0p1 ];then
-        rm -rf openssh-8.0p1
-    fi
-    tar zxvf openssh-8.0p1.tar.gz
-    cd openssh-8.0p1
-    chmod -R 0600 /etc/ssh/
-    ./configure --prefix=/usr --sysconfdir=/etc/ssh --with-pam --with-zlib --with-md5-passwords --without-openssl-header-check
-    make clean
-    make && make install
-    cp -f ssh_config /etc/ssh/ssh_config
-    echo 'StrictHostKeyChecking no' >>/etc/ssh/ssh_config
-    echo 'UserKnownHostsFile=/dev/null'>>/etc/ssh/ssh_config
-    cp -f sshd_config /etc/ssh/sshd_config
-    sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
-    sed -i 's/^GSSAPIAuthentication/#GSSAPIAuthentication no/g' /etc/ssh/sshd_config
-    sed -i 's/^GSSAPICleanupCredentials/#GSSAPICleanupCredentials no/g' /etc/ssh/sshd_config
-    if [ ! -z $(/usr/sbin/sshd -t -f /etc/ssh/sshd_config) ];then
-        echo 'error, please run /usr/sbin/sshd -t -f /etc/ssh/sshd_config'
-        exit
-    fi
-fi
-
-
-if [ -f /usr/local/apr/lib/libtcnative-1.a ];then
-    exit
 fi
 
 export JAVA_HOME=/usr/lib/jvm/java
@@ -179,37 +178,39 @@ export PATH=$PATH:$JAVA_HOME/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/b
 export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 
 cd ~
-if [ ! -e apr-1.6.5.tar.gz ];then
-    wget -c http://archive.apache.org/dist/apr/apr-1.6.5.tar.gz
-fi
-if [ -d apr-1.6.5 ];then
-    rm -rf apr-1.6.5
-fi
-tar zxvf apr-1.6.5.tar.gz
-cd apr-1.6.5
-./configure --prefix=/usr/local/apr
-make && make install
+if [ ! -f /usr/local/apr/lib/libtcnative-1.a ];then
+    if [ ! -e apr-1.6.5.tar.gz ];then
+        wget -c http://archive.apache.org/dist/apr/apr-1.6.5.tar.gz
+    fi
+    if [ -d apr-1.6.5 ];then
+        rm -rf apr-1.6.5
+    fi
+    tar zxvf apr-1.6.5.tar.gz
+    cd apr-1.6.5
+    ./configure --prefix=/usr/local/apr
+    make && make install
 
-cd ~
-if [ ! -e apr-util-1.6.1.tar.gz ];then
-    wget -c http://archive.apache.org/dist/apr/apr-util-1.6.1.tar.gz
-fi
-if [ -d apr-util-1.6.1 ];then
-    rm -rf apr-util-1.6.1
-fi
-tar zxvf apr-util-1.6.1.tar.gz
-cd apr-util-1.6.1
-./configure --prefix=/usr/local/apr-util --with-apr=/usr/local/apr
-make && make install
+    cd ~
+    if [ ! -e apr-util-1.6.1.tar.gz ];then
+        wget -c http://archive.apache.org/dist/apr/apr-util-1.6.1.tar.gz
+    fi
+    if [ -d apr-util-1.6.1 ];then
+        rm -rf apr-util-1.6.1
+    fi
+    tar zxvf apr-util-1.6.1.tar.gz
+    cd apr-util-1.6.1
+    ./configure --prefix=/usr/local/apr-util --with-apr=/usr/local/apr
+    make && make install
 
-cd ~
-if [ ! -e tomcat-native-1.2.23-src.tar.gz ];then
-    wget -c http://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-connectors/native/1.2.23/source/tomcat-native-1.2.23-src.tar.gz
+    cd ~
+    if [ ! -e tomcat-native-1.2.23-src.tar.gz ];then
+        wget -c http://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-connectors/native/1.2.23/source/tomcat-native-1.2.23-src.tar.gz
+    fi
+    if [ -d tomcat-native-1.2.23-src ];then
+        rm -rf tomcat-native-1.2.23-src
+    fi
+    tar zxvf tomcat-native-1.2.23-src.tar.gz
+    cd tomcat-native-1.2.23-src/native/
+    ./configure --with-apr=/usr/local/apr --with-java-home=/usr/lib/jvm/java
+    make && make install
 fi
-if [ -d tomcat-native-1.2.23-src ];then
-    rm -rf tomcat-native-1.2.23-src
-fi
-tar zxvf tomcat-native-1.2.23-src.tar.gz
-cd tomcat-native-1.2.23-src/native/
-./configure --with-apr=/usr/local/apr --with-java-home=/usr/lib/jvm/java
-make && make install
