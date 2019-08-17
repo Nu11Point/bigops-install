@@ -146,7 +146,9 @@ if [ $? != 0 ];then
     chkconfig telnet on
     chkconfig xinetd on
     service xinetd start
-    mv /etc/securetty /etc/securetty.bak
+    if [ -z $(egrep 'pts/3' /etc/securetty) ];then
+        echo 'pts/3' >>/etc/securetty
+    fi
     cd ~
     if [ -z "$(openssl version|egrep 1.0.2s)" ];then
         if [ ! -e openssl-1.0.2s.tar.gz ];then
