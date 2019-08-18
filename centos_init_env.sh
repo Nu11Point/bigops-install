@@ -4,9 +4,15 @@ alias rm=rm
 alias cp=cp
 alias mv=mv
 
+#关闭selinux
 sed -i 's/^SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 sed -i 's/^SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 
+#修改yum超时时间
+sed -i '/timeout=.*/d' /etc/yum.conf 
+echo 'timeout=60' >>/etc/yum.conf
+
+#关闭防火墙
 which "/usr/bin/systemctl" >/dev/null 2>&1
 if [ $? == 0 ];then
     systemctl disable iptables
@@ -17,6 +23,26 @@ else
     chkconfig --level 345 iptables off
     service iptables stop
 fi
+
+#关闭NOZEROCONF
+sed -i '/NOZEROCONF.*/d' /etc/sysconfig/network
+echo "NOZEROCONF=yes" >> /etc/sysconfig/network
+
+#关闭NM
+sed -i 's#.*NM_CONTROLLED=.*#NM_CONTROLLED="no"#g' /etc/sysconfig/network-scripts/ifcfg-*
+
+#删除mcelog
+rm -f /etc/cron.hourly/mcelog.cron
+
+#关闭发邮件
+if [ -z "$(egrep MAILCHECK /etc/profile)" ];then
+    echo 'unset MAILCHECK'>>/etc/profile
+fi
+sed -i "s/^MAILTO=.*/MAILTO=\"\"/g" /etc/crontab
+
+#关闭远程sudo执行命令需要输入密码和没有终端不让执行命令问题
+sed -i 's/Defaults *requiretty/#Defaults requiretty/g' /etc/sudoers
+sed -i 's/Defaults *!visiblepw/Defaults   visiblepw/g' /etc/sudoers
 
 yum -y install wget
 wget -O /etc/yum.repos.d/CentOS-Base.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/CentOS-Base.repo
@@ -30,10 +56,10 @@ wget -O /etc/yum.repos.d/epel.repo https://raw.githubusercontent.com/yunweibang/
 wget -O /etc/yum.repos.d/remi.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/remi.repo
 wget -O /etc/yum.repos.d/nginx.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/nginx.repo
 yum -y update
-yum -y install ansible apr apr-devel apr-util autoconf automake dos2unix expat-devel freerdp freerdp-devel \
+yum -y install ansible apr apr-devel apr-util autoconf automake curl dos2unix expat-devel freerdp freerdp-devel fping \
 gcc gcc-c++ java-1.8.0-openjdk java-1.8.0-openjdk-devel kde-l10n-Chinese libssh2 libssh2-devel libtool* make \
-net-tools nginx ntpdate openssl openssl-devel openssl-devel openssl-libs pam-devel perl perl-devel \
-subversion subversion-devel sysstat systemd-devel tomcat-native traceroute zlib-devel
+net-tools nginx ntpdate nmap ntsysv openssl openssl-devel openssl-devel openssl-libs pam-devel perl perl-devel \
+subversion subversion-devel sysstat systemd-devel screen tomcat-native traceroute zlib-devel
 
 which "/usr/bin/systemctl" >/dev/null 2>&1
 if [ $? == 0 ];then
@@ -105,6 +131,9 @@ wget -O /etc/security/limits.d/90-nproc.conf https://raw.githubusercontent.com/y
 wget -O /etc/sysctl.conf https://raw.githubusercontent.com/yunweibang/bigops-install/master/sysctl.conf
 
 sed -i '/ \/ .* defaults /s/defaults/defaults,noatime,nodiratime,nobarrier/g' /etc/fstab
+sed -i 's/tmpfs.*/tmpfs\t\t\t\/dev\/shm\t\ttmpfs\tdefaults,nosuid,noexec,nodev 0 0/g' /etc/fstab
+sed -i '/ \/data .* defaults /s/defaults/defaults,noatime,nodiratime,nobarrier/g' /etc/fstab
+
 cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 if [ -z "$(grep ntpdate /var/spool/cron/root)" ];then
@@ -131,10 +160,6 @@ if [ -z "$(egrep JAVA_HOME /etc/profile)" ];then
    echo 'export JAVA_HOME=/usr/lib/jvm/java'>>/etc/profile
    echo 'export PATH=$PATH:$JAVA_HOME/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib64:/lib64'>>/etc/profile
    echo 'export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar'>>/etc/profile
-fi
-
-if [ -z "$(egrep MAILCHECK /etc/profile)" ];then
-    echo 'unset MAILCHECK'>>/etc/profile
 fi
 
 source /etc/profile
