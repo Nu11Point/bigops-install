@@ -196,8 +196,7 @@ if [ ! -f /usr/bin/systemctl ];then
         tar zxvf openssl-1.0.2s.tar.gz
         cd openssl-1.0.2s
         ./config --prefix=/usr shared zlib
-        make clean
-        make && make install
+        make clean && make && make install
         if [ $? != 0 ];then
             echo ---------------------------------
             echo "install openssl, failed"
@@ -218,8 +217,7 @@ if [ ! -f /usr/bin/systemctl ];then
         cd openssh-8.0p1
         chmod -R 0600 /etc/ssh/
         ./configure --prefix=/usr --sysconfdir=/etc/ssh --with-pam --with-zlib --with-md5-passwords --without-openssl-header-check
-        make clean
-        make && make install
+        make clean && make && make install
         if [ $? != 0 ];then
             echo ---------------------------------
             echo "install openssh, failed"
@@ -259,7 +257,7 @@ if [ ! -f /usr/local/apr/lib/libtcnative-1.a ];then
     tar zxvf apr-1.6.5.tar.gz
     cd apr-1.6.5
     ./configure --prefix=/usr/local/apr
-    make && make install
+    make clean && make && make install
     if [ $? != 0 ];then
         echo ---------------------------------
         echo "install apr, failed"
@@ -277,7 +275,7 @@ if [ ! -f /usr/local/apr/lib/libtcnative-1.a ];then
     tar zxvf apr-util-1.6.1.tar.gz
     cd apr-util-1.6.1
     ./configure --prefix=/usr/local/apr-util --with-apr=/usr/local/apr
-    make && make install
+    make clean && make && make install
     if [ $? != 0 ];then
         echo ---------------------------------
         echo "install apr-util, failed"
@@ -295,7 +293,7 @@ if [ ! -f /usr/local/apr/lib/libtcnative-1.a ];then
     tar zxvf tomcat-native-1.2.23-src.tar.gz
     cd tomcat-native-1.2.23-src/native/
     ./configure --with-apr=/usr/local/apr --with-java-home=/usr/lib/jvm/java
-    make && make install
+    make clean && make && make install
     if [ $? != 0 ];then
         echo ---------------------------------
         echo "install tomcat-native, failed"
@@ -315,8 +313,7 @@ medusainst(){
     tar zxvf libssh2-1.8.2.tar.gz
     cd libssh2-1.8.2
     ./configure --prefix=/usr
-    make clean
-    make && make install
+    make clean && make && make install
     if [ $? != 0 ];then
         echo ---------------------------------
         echo "install libssh2, failed"
@@ -334,8 +331,7 @@ medusainst(){
     tar zxvf medusa-2.2.tar.gz
     cd medusa-2.2
     ./configure --prefix=/usr --enable-module-ssh=yes
-    make clean
-    make && make install
+    make clean && make && make install
     if [ $? != 0 ];then
         echo ---------------------------------
         echo "install medusa, failed"
@@ -369,8 +365,7 @@ if [ -z "$(/usr/bin/nmap -V|grep 7.80)" ];then
     tar zxvf nmap-7.80.tgz
     cd nmap-7.80
     ./configure --prefix=/usr
-    make clean
-    make && make install
+    make clean && make && make install
     if [ $? != 0 ];then
         echo ---------------------------------
         echo "install nmap, failed"
