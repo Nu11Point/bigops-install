@@ -144,7 +144,6 @@ fi
 
 sed -i '/ \/ .* defaults /s/defaults/defaults,noatime,nodiratime,nobarrier/g' /etc/fstab
 sed -i 's/tmpfs.*/tmpfs\t\t\t\/dev\/shm\t\ttmpfs\tdefaults,nosuid,noexec,nodev 0 0/g' /etc/fstab
-sed -i '/ \/data .* defaults /s/defaults/defaults,noatime,nodiratime,nobarrier/g' /etc/fstab
 
 cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
@@ -187,7 +186,7 @@ if [ ! -f /usr/bin/systemctl ];then
     fi
     cd ~
     if [ -z "$(openssl version|egrep 1.0.2s)" ];then
-        if [ ! -e openssl-1.0.2s.tar.gz ];then
+        if [ ! -f openssl-1.0.2s.tar.gz ];then
             wget -c https://www.openssl.org/source/openssl-1.0.2s.tar.gz
         fi
         if [ -d openssl-1.0.2s ];then
@@ -207,7 +206,7 @@ if [ ! -f /usr/bin/systemctl ];then
 
     cd ~
     if [ -z "$(strings /usr/sbin/sshd | grep OpenSSH_8.0p1)" ];then
-        if [ ! -e openssh-8.0p1.tar.gz ];then
+        if [ ! -f openssh-8.0p1.tar.gz ];then
             wget -c https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-8.0p1.tar.gz
         fi
         if [ -d openssh-8.0p1 ];then
@@ -248,7 +247,7 @@ export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 
 cd ~
 if [ ! -f /usr/local/apr/lib/libtcnative-1.a ];then
-    if [ ! -e apr-1.6.5.tar.gz ];then
+    if [ ! -f apr-1.6.5.tar.gz ];then
         wget -c http://archive.apache.org/dist/apr/apr-1.6.5.tar.gz
     fi
     if [ -d apr-1.6.5 ];then
@@ -266,7 +265,7 @@ if [ ! -f /usr/local/apr/lib/libtcnative-1.a ];then
     fi
 
     cd ~
-    if [ ! -e apr-util-1.6.1.tar.gz ];then
+    if [ ! -f apr-util-1.6.1.tar.gz ];then
         wget -c http://archive.apache.org/dist/apr/apr-util-1.6.1.tar.gz
     fi
     if [ -d apr-util-1.6.1 ];then
@@ -284,7 +283,7 @@ if [ ! -f /usr/local/apr/lib/libtcnative-1.a ];then
     fi
 
     cd ~
-    if [ ! -e tomcat-native-1.2.23-src.tar.gz ];then
+    if [ ! -f tomcat-native-1.2.23-src.tar.gz ];then
         wget -c http://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-connectors/native/1.2.23/source/tomcat-native-1.2.23-src.tar.gz
     fi
     if [ -d tomcat-native-1.2.23-src ];then
@@ -304,7 +303,7 @@ fi
 
 medusainst(){
     cd ~
-    if [ ! -e libssh2-1.8.2.tar.gz ];then
+    if [ ! -f libssh2-1.8.2.tar.gz ];then
         wget -c https://github.com/yunweibang/bigops-install/raw/master/soft/libssh2-1.8.2.tar.gz
     fi
     if [ -d libssh2-1.8.2 ];then
@@ -322,7 +321,7 @@ medusainst(){
     fi
 
     cd ~
-    if [ ! -e medusa-2.2.tar.gz ];then
+    if [ ! -f medusa-2.2.tar.gz ];then
         wget -c https://github.com/yunweibang/bigops-install/raw/master/soft/medusa-2.2.tar.gz
     fi
     if [ -d medusa-2.2 ];then
@@ -330,7 +329,7 @@ medusainst(){
     fi
     tar zxvf medusa-2.2.tar.gz
     cd medusa-2.2
-    ./configure --prefix=/usr --enable-module-ssh=yes
+    ./configure --enable-module-ssh=yes
     make clean && make && make install
     if [ $? != 0 ];then
         echo ---------------------------------
@@ -338,11 +337,13 @@ medusainst(){
         echo ---------------------------------
         exit
     fi
+    if [ -f /usr/local/bin/medusa ];then
+        ln -sf /usr/local/bin/medusa /usr/bin/medusa
+    fi
 
 }
 
-which "/usr/bin/medusa" >/dev/null 2>&1
-if [ $? != 0 ];then
+if [ ! -f /usr/bin/medusa ];then
     medusainst
 else
     if [ -z "$(/usr/bin/medusa -d|grep ssh.mod)" ];then
@@ -355,16 +356,15 @@ fi
 
 if [ -z "$(/usr/bin/nmap -V|grep 7.80)" ];then
     cd ~
-    if [ ! -e nmap-7.80.tgz ];then
+    if [ ! -f nmap-7.80.tgz ];then
         wget -c https://github.com/yunweibang/bigops-install/raw/master/soft/nmap-7.80.tgz
     fi
     if [ -d nmap-7.80 ];then
         rm -rf nmap-7.80
     fi
-    chattr -i /usr/bin/nmap
     tar zxvf nmap-7.80.tgz
     cd nmap-7.80
-    ./configure --prefix=/usr
+    ./configure
     make clean && make && make install
     if [ $? != 0 ];then
         echo ---------------------------------
@@ -372,13 +372,21 @@ if [ -z "$(/usr/bin/nmap -V|grep 7.80)" ];then
         echo ---------------------------------
         exit
     fi
-    chattr +i /usr/bin/nmap
+    if [ -f /usr/local/bin/nmap ];then
+        ln -sf /usr/local/bin/nmap /usr/bin/nmap
+    fi
 fi
 
-if [ -z "$(/usr/bin/jq -V|grep ^jq-1.6)" ];then
-    wget -O /usr/bin/jq https://github.com/yunweibang/bigops-install/raw/master/soft/jq-linux64
-    chmod 777 /usr/bin/jq
+if [ ! -f /usr/bin/jq-linux64 ];then
+    wget -O /usr/bin/jq-linux64 https://github.com/yunweibang/bigops-install/raw/master/soft/jq-linux64
 fi
+
+if [ -z "$(/usr/bin/jq-linux64 -V|grep ^jq-1.6)" ];then
+    wget -O /usr/bin/jq-linux64 https://github.com/yunweibang/bigops-install/raw/master/soft/jq-linux64
+fi
+
+chmod 777 /usr/bin/jq-linux64
+ln -sf /usr/bin/jq-linux64 /usr/bin/jq
 
 if [ ! -d /opt/ngxlog/ ];then
     mkdir /opt/ngxlog
