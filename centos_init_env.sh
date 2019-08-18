@@ -198,6 +198,12 @@ if [ ! -f /usr/bin/systemctl ];then
         ./config --prefix=/usr shared zlib
         make clean
         make && make install
+        if [ $? != 0 ];then
+            echo ---------------------------------
+            echo "install openssl, failed"
+            echo ---------------------------------
+            exit
+        fi
     fi
 
     cd ~
@@ -214,6 +220,12 @@ if [ ! -f /usr/bin/systemctl ];then
         ./configure --prefix=/usr --sysconfdir=/etc/ssh --with-pam --with-zlib --with-md5-passwords --without-openssl-header-check
         make clean
         make && make install
+        if [ $? != 0 ];then
+            echo ---------------------------------
+            echo "install openssh, failed"
+            echo ---------------------------------
+            exit
+        fi
         cp -f ssh_config /etc/ssh/ssh_config
         echo 'StrictHostKeyChecking no' >>/etc/ssh/ssh_config
         echo 'UserKnownHostsFile=/dev/null'>>/etc/ssh/ssh_config
@@ -222,7 +234,9 @@ if [ ! -f /usr/bin/systemctl ];then
         sed -i 's/^GSSAPIAuthentication/#GSSAPIAuthentication no/g' /etc/ssh/sshd_config
         sed -i 's/^GSSAPICleanupCredentials/#GSSAPICleanupCredentials no/g' /etc/ssh/sshd_config
         if [ ! -z $(/usr/sbin/sshd -t -f /etc/ssh/sshd_config) ];then
-            echo 'initialization failed, please run /usr/sbin/sshd -t -f /etc/ssh/sshd_config'
+            echo ---------------------------------
+            echo 'install openssh failed, please run /usr/sbin/sshd -t -f /etc/ssh/sshd_config'
+            echo ---------------------------------
             exit
         fi
     fi
@@ -246,6 +260,12 @@ if [ ! -f /usr/local/apr/lib/libtcnative-1.a ];then
     cd apr-1.6.5
     ./configure --prefix=/usr/local/apr
     make && make install
+    if [ $? != 0 ];then
+        echo ---------------------------------
+        echo "install apr, failed"
+        echo ---------------------------------
+        exit
+    fi
 
     cd ~
     if [ ! -e apr-util-1.6.1.tar.gz ];then
@@ -258,6 +278,12 @@ if [ ! -f /usr/local/apr/lib/libtcnative-1.a ];then
     cd apr-util-1.6.1
     ./configure --prefix=/usr/local/apr-util --with-apr=/usr/local/apr
     make && make install
+    if [ $? != 0 ];then
+        echo ---------------------------------
+        echo "install apr-util, failed"
+        echo ---------------------------------
+        exit
+    fi
 
     cd ~
     if [ ! -e tomcat-native-1.2.23-src.tar.gz ];then
@@ -270,6 +296,12 @@ if [ ! -f /usr/local/apr/lib/libtcnative-1.a ];then
     cd tomcat-native-1.2.23-src/native/
     ./configure --with-apr=/usr/local/apr --with-java-home=/usr/lib/jvm/java
     make && make install
+    if [ $? != 0 ];then
+        echo ---------------------------------
+        echo "install tomcat-native, failed"
+        echo ---------------------------------
+        exit
+    fi
 fi
 
 medusainst(){
@@ -285,6 +317,12 @@ medusainst(){
     ./configure --prefix=/usr
     make clean
     make && make install
+    if [ $? != 0 ];then
+        echo ---------------------------------
+        echo "install libssh2, failed"
+        echo ---------------------------------
+        exit
+    fi
 
     cd ~
     if [ ! -e medusa-2.2.tar.gz ];then
@@ -298,6 +336,13 @@ medusainst(){
     ./configure --prefix=/usr --enable-module-ssh=yes
     make clean
     make && make install
+    if [ $? != 0 ];then
+        echo ---------------------------------
+        echo "install medusa, failed"
+        echo ---------------------------------
+        exit
+    fi
+
 }
 
 which "/usr/bin/medusa" >/dev/null 2>&1
@@ -326,6 +371,12 @@ if [ -z "$(/usr/bin/nmap -V|grep 7.80)" ];then
     ./configure --prefix=/usr
     make clean
     make && make install
+    if [ $? != 0 ];then
+        echo ---------------------------------
+        echo "install nmap, failed"
+        echo ---------------------------------
+        exit
+    fi
     chattr +i /usr/bin/nmap
 fi
 
