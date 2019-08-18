@@ -13,8 +13,7 @@ sed -i '/timeout=.*/d' /etc/yum.conf
 echo 'timeout=60' >>/etc/yum.conf
 
 #关闭防火墙
-which "/usr/bin/systemctl" >/dev/null 2>&1
-if [ $? == 0 ];then
+if [ -f /usr/bin/systemctl ];then
     systemctl disable iptables
     systemctl stop iptables
     systemctl disable firewalld
@@ -22,6 +21,16 @@ if [ $? == 0 ];then
 else
     chkconfig --level 345 iptables off
     service iptables stop
+fi
+
+#关闭ipv6
+if [ ! -f /usr/bin/systemctl ];then
+cat << EOF > /etc/modprobe.d/ipv6.conf
+alias net-pf-10 off
+options ipv6 disable=1
+EOF
+sed -i '/NETWORKING_IPV6.*/d' /etc/sysconfig/network
+echo 'NETWORKING_IPV6=no' >> /etc/sysconfig/network
 fi
 
 #关闭NOZEROCONF
@@ -57,12 +66,11 @@ wget -O /etc/yum.repos.d/remi.repo https://raw.githubusercontent.com/yunweibang/
 wget -O /etc/yum.repos.d/nginx.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/nginx.repo
 yum -y update
 yum -y install ansible apr apr-devel apr-util autoconf automake curl dos2unix expat-devel freerdp freerdp-devel fping \
-gcc gcc-c++ java-1.8.0-openjdk java-1.8.0-openjdk-devel kde-l10n-Chinese libssh2 libssh2-devel libtool* make \
+gcc gcc-c++ java-1.8.0-openjdk* kde-l10n-Chinese libssh2 libssh2-devel libtool* make \
 net-tools nginx ntpdate nmap ntsysv openssl openssl-devel openssl-devel openssl-libs pam-devel perl perl-devel \
 subversion subversion-devel sysstat systemd-devel screen tomcat-native traceroute zlib-devel
 
-which "/usr/bin/systemctl" >/dev/null 2>&1
-if [ $? == 0 ];then
+if [ -f /usr/bin/systemctl ];then
     for i in $(systemctl list-unit-files|egrep 'enabled'|awk '{print $1}'|egrep -v '\.target$|@\.');do
         systemctl disable $i
     done
@@ -129,6 +137,10 @@ wget -O /etc/security/limits.conf https://raw.githubusercontent.com/yunweibang/b
 wget -O /etc/security/limits.d/90-nproc.conf https://raw.githubusercontent.com/yunweibang/bigops-install/master/90-nproc.conf
 
 wget -O /etc/sysctl.conf https://raw.githubusercontent.com/yunweibang/bigops-install/master/sysctl.conf
+if [ -f /usr/bin/systemctl ];then
+    echo 'net.ipv6.conf.all.disable_ipv6 = 1' >>/etc/sysctl.conf
+    echo 'net.ipv6.conf.default.disable_ipv6 = 1' >>/etc/sysctl.conf
+fi
 
 sed -i '/ \/ .* defaults /s/defaults/defaults,noatime,nodiratime,nobarrier/g' /etc/fstab
 sed -i 's/tmpfs.*/tmpfs\t\t\t\/dev\/shm\t\ttmpfs\tdefaults,nosuid,noexec,nodev 0 0/g' /etc/fstab
@@ -164,8 +176,7 @@ fi
 
 source /etc/profile
 
-which "/usr/bin/systemctl" >/dev/null 2>&1
-if [ $? != 0 ];then
+if [ ! -f /usr/bin/systemctl ];then
     yum -y install telnet-server telnet xinetd
     wget -O /etc/xinetd.d/telnet https://raw.githubusercontent.com/yunweibang/bigops-install/master/telnet
     chkconfig telnet on
@@ -211,7 +222,7 @@ if [ $? != 0 ];then
         sed -i 's/^GSSAPIAuthentication/#GSSAPIAuthentication no/g' /etc/ssh/sshd_config
         sed -i 's/^GSSAPICleanupCredentials/#GSSAPICleanupCredentials no/g' /etc/ssh/sshd_config
         if [ ! -z $(/usr/sbin/sshd -t -f /etc/ssh/sshd_config) ];then
-            echo 'error, please run /usr/sbin/sshd -t -f /etc/ssh/sshd_config'
+            echo 'initialization failed, please run /usr/sbin/sshd -t -f /etc/ssh/sshd_config'
             exit
         fi
     fi
@@ -324,3 +335,9 @@ fi
 if [ ! -d /opt/ngxlog/ ];then
     mkdir /opt/ngxlog
 fi
+
+echo
+echo ---------------------------------
+echo 'Successful initialization'
+echo ---------------------------------
+echo

@@ -5,8 +5,7 @@ yum -y install perl-Module-Pluggable perl-Pod-Escapes perl-Pod-Simple perl-libs 
 yum -y install perl-parent perl-Pod-Escapes perl-Pod-Simple perl-Time-HiRes perl-libs openssl-devel openssl
 yum -y install libaio1 libaio-dev
 
-which "/usr/bin/systemctl" >/dev/null 2>&1
-if [ $? == 0 ];then
+if [ -f /usr/bin/systemctl ];then
     systemctl stop mysqld.service
 else
     service mysqld stop
@@ -48,8 +47,7 @@ inst(){
     mysqld --user=mysql --lower-case-table-names=0 --initialize-insecure
     chown -R mysql:mysql /var/lib/mysql
     
-    which "/usr/bin/systemctl" >/dev/null 2>&1
-    if [ $? == 0 ];then
+    if [ -f /usr/bin/systemctl ];then
         systemctl start mysqld.service
     else
         service mysqld start
