@@ -65,7 +65,7 @@ wget -O /etc/yum.repos.d/epel.repo https://raw.githubusercontent.com/yunweibang/
 wget -O /etc/yum.repos.d/remi.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/remi.repo
 wget -O /etc/yum.repos.d/nginx.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/nginx.repo
 yum -y update
-yum -y install ansible apr apr-devel apr-util autoconf automake curl dos2unix expat-devel freerdp freerdp-devel fping \
+yum -y install ansible apr apr-devel apr-util autoconf automake bzip2 curl dos2unix expat-devel freerdp freerdp-devel fping \
 gcc gcc-c++ java-1.8.0-openjdk* kde-l10n-Chinese libssh2 libssh2-devel libtool* make \
 net-tools nginx ntpdate nmap ntsysv openssl openssl-devel openssl-devel openssl-libs pam-devel perl perl-devel \
 subversion subversion-devel sysstat systemd-devel screen tomcat-native traceroute zlib-devel
@@ -312,19 +312,21 @@ else
     fi
 fi
 
-if [ -z "$(/usr/bin/nmap -V|grep 7.70)" ];then
+if [ -z "$(/usr/bin/nmap -V|grep 7.80)" ];then
     cd ~
-    if [ ! -e nmap-7.70.tgz ];then
-        wget -c https://github.com/yunweibang/bigops-install/raw/master/soft/nmap-7.70.tgz
+    if [ ! -e nmap-7.80.tgz ];then
+        wget -c https://github.com/yunweibang/bigops-install/raw/master/soft/nmap-7.80.tgz
     fi
-    if [ -d nmap-7.70 ];then
-        rm -rf nmap-7.70
+    if [ -d nmap-7.80 ];then
+        rm -rf nmap-7.80
     fi
-    tar zxvf nmap-7.70.tgz
-    cd nmap-7.70
+    chattr -i /usr/bin/nmap
+    tar zxvf nmap-7.80.tgz
+    cd nmap-7.80
     ./configure --prefix=/usr
     make clean
     make && make install
+    chattr +i /usr/bin/nmap
 fi
 
 if [ -z "$(/usr/bin/jq -V|grep ^jq-1.6)" ];then
