@@ -321,7 +321,7 @@ medusainst(){
     fi
     tar zxvf libssh2-1.8.2.tar.gz
     cd libssh2-1.8.2
-    ./configure --prefix=/usr
+    ./configure
     make clean && make && make install
     if [ $? != 0 ];then
         echo ---------------------------------
@@ -329,6 +329,8 @@ medusainst(){
         echo ---------------------------------
         exit
     fi
+    cp -f /usr/local/lib/libssh2.* /lib/
+    cp -f /usr/local/lib/libssh2.* /lib64/
 
     cd ~
     if [ ! -f medusa-2.2.tar.gz ];then
