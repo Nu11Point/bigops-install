@@ -24,7 +24,7 @@ inst(){
         echo "not found /usr/sbin/mysqld, installation failed"
         exit
     fi
-    wget -O /etc/my.cnf https://raw.githubusercontent.com/yunweibang/bigops-config/master/mysql/my-80.cnf
+    wget -O /etc/my.cnf https://raw.githubusercontent.com/yunweibang/bigops-install/master/mysql/my-80.cnf
     chmod 644 /etc/my.cnf
 
     echo -e "Confirm delete database datadir: /var/lib/mysql/ , (y/n)?"

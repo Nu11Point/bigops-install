@@ -165,7 +165,7 @@ for i in $(ls /sys/class/net|egrep -v 'lo|usb') ; do ethtool -K $i tso off; done
 for i in $(ls /sys/class/net|egrep -v 'lo|usb') ; do ethtool -K $i gso off; done
 for i in $(ls /sys/class/net|egrep -v 'lo|usb') ; do ethtool -K $i gro off; done
 
-wget -O /etc/ansible/ansible.cfg https://raw.githubusercontent.com/yunweibang/bigops-config/master/ansible.cfg
+wget -O /etc/ansible/ansible.cfg https://raw.githubusercontent.com/yunweibang/bigops-install/master/ansible.cfg
 
 if [ -e /usr/lib/jvm/java ];then
     sed -i '/^export JAVA_HOME=.*/g' /etc/profile
