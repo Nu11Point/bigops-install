@@ -1,0 +1,14 @@
+[Unit]
+Description=kibana
+After=network.target
+
+[Service]
+PIDFile=/var/run/kibana.pid
+ExecStart=/opt/kibana/bin/kibana --allow-root
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=false
+
+[Install]
+WantedBy=multi-user.target
+

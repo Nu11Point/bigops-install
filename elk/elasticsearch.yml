@@ -1,0 +1,28 @@
+cluster.name: bastion
+node.data: true
+http.port: 9200
+path.data: /opt/es_data
+path.logs: /opt/es_logs
+
+bootstrap.memory_lock: false
+bootstrap.system_call_filter: false
+
+network.host: 192.168.xxx.xxx
+
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+
+xpack.security.enabled: true
+xpack.security.transport.ssl.enabled: true
+
+#集群相关
+transport.tcp.port: 9300
+cluster.initial_master_nodes: ["127.0.0.1"]
+#集群发现，写集群中其它机器及端口
+node.name: 192.168.xxx.xxx
+node.master: true
+#node.master: false
+discovery.seed_hosts: ["192.168.xxx.xxx:9300"]
+
+
+
