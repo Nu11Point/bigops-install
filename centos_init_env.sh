@@ -167,13 +167,16 @@ for i in $(ls /sys/class/net|egrep -v 'lo|usb') ; do ethtool -K $i gro off; done
 
 wget -O /etc/ansible/ansible.cfg https://raw.githubusercontent.com/yunweibang/bigops-config/master/ansible.cfg
 
-
-if [ -z "$(egrep JAVA_HOME /etc/profile)" ];then
-   echo 'export JAVA_HOME=/usr/lib/jvm/java'>>/etc/profile
-   echo 'export PATH=$PATH:$JAVA_HOME/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib64:/lib64'>>/etc/profile
-   echo 'export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar'>>/etc/profile
+if [ -e /usr/lib/jvm/java ];then
+    sed -i '/^export JAVA_HOME=.*/g' /etc/profile
+    sed -i '/^export PATH=.*/g' /etc/profile
+    sed -i '/^export CLASSPATH=.*/g' /etc/profile
+    echo 'export JAVA_HOME=/usr/lib/jvm/java'>>/etc/profile
+    echo 'export PATH=$PATH:$JAVA_HOME/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib64:/lib64'>>/etc/profile
+    echo 'export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar'>>/etc/profile
 fi
 
+sed -rni 'h;n;:a;H;n;$!ba;g;s/(\n){2,}/\n\n/g;p' /etc/profile
 source /etc/profile
 
 if [ -d /usr/local/lib ];then
