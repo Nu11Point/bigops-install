@@ -389,13 +389,12 @@ fi
 
 if [ ! -f /usr/bin/jq-linux64 ];then
     wget -O /usr/bin/jq-linux64 https://github.com/yunweibang/bigops-install/raw/master/soft/jq-linux64
+    chmod 777 /usr/bin/jq-linux64
 fi
-
 if [ -z "$(/usr/bin/jq-linux64 -V|grep ^jq-1.6)" ];then
     wget -O /usr/bin/jq-linux64 https://github.com/yunweibang/bigops-install/raw/master/soft/jq-linux64
+    chmod 777 /usr/bin/jq-linux64
 fi
-
-chmod 777 /usr/bin/jq-linux64
 ln -sf /usr/bin/jq-linux64 /usr/bin/jq
 
 if [ ! -d /opt/ngxlog/ ];then
