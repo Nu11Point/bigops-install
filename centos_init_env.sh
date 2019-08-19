@@ -175,6 +175,16 @@ fi
 
 source /etc/profile
 
+if [ -d /usr/local/lib ];then
+    echo '/usr/local/lib' > /etc/ld.so.conf.d/local.conf
+    ldconfig
+fi
+
+if [ -d /usr/local/lib ];then
+    echo '/usr/local/lib' > /etc/ld.so.conf.d/local.conf
+    ldconfig
+fi
+
 if [ ! -f /usr/bin/systemctl ];then
     yum -y install telnet-server telnet xinetd
     wget -O /etc/xinetd.d/telnet https://raw.githubusercontent.com/yunweibang/bigops-install/master/telnet
