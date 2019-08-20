@@ -5,13 +5,13 @@
 case "$1" in
 start)
     cd  /opt/kibana
-    ./bin/kibana &
+    ./bin/kibana --allow-root >/dev/null 2>&1 &
     echo "kibana startup"
     ;;  
 stop)
     kibana_pid=`ps aux|grep node/bin/node|grep -v 'grep node/bin/node'| awk '{print $2}'`
     if [ ! -z "$kibana_pid" ];then
-	kill -9 $kibana_pid
+	    kill -9 $kibana_pid
     fi
     echo "kibana stopped"
     ;;  
@@ -23,7 +23,7 @@ restart)
     echo "kibana stopped"
 
     cd  /opt/kibana
-    ./bin/kibana &
+        ./bin/kibana --allow-root >/dev/null 2>&1 &
     echo "kibana startup"
     ;;  
 *)

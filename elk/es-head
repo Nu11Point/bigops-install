@@ -1,0 +1,35 @@
+#!/bin/sh
+#chkconfig: 2345 81 06
+#description: es-head
+ 
+case "$1" in
+start)
+    cd /opt/es-head
+    npm run start >/dev/null 2>&1 &
+    echo "es-head startup"
+    ;;  
+stop)
+    es_head_pid=`ps aux|grep ' grunt'|grep -v grep|awk '{print $2}'`
+    if [ ! -z "$es_head_pid" ];then
+        kill -9 $es_head_pid
+    fi
+    echo "es-head stopped"
+    ;;  
+restart)
+    es_head_pid=`ps aux|grep ' grunt'|grep -v grep|awk '{print $2}'`
+    if [ ! -z "$es_head_pid" ];then
+        kill -9 $es_head_pid
+    fi
+    echo "es-head stopped"
+
+    cd /opt/es-head
+    npm run start >/dev/null 2>&1 &
+    echo "es-head startup"
+    ;;  
+*)
+    echo "start|stop|restart"
+    ;;  
+esac
+
+exit $?
+

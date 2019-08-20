@@ -1,5 +1,5 @@
 [Unit]
-Description=elasticsearch-head
+Description=es-head
 After=network.target
 
 [Service]
