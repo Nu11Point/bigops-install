@@ -18,7 +18,7 @@ fi
 ES_USER="es"
 ES_GROUP="es"
 ES_HOME="/opt/es"
-PID_DIR="/var/run/elasticsearch"
+PID_DIR="/var/run"
 exec="$ES_HOME/bin/elasticsearch"
 prog="elasticsearch"
 pidfile="$PID_DIR/${prog}.pid"
@@ -27,7 +27,6 @@ export ES_HEAP_SIZE
 export ES_HEAP_NEWSIZE
 export ES_DIRECT_SIZE
 export ES_JAVA_OPTS
-export ES_GC_LOG_FILE
 export ES_STARTUP_SLEEP_TIME
 export ES_INCLUDE
 
@@ -56,17 +55,12 @@ checkJava() {
 }
 
 start() {
+    sysctl -q -w vm.max_map_count=655360
+    ulimit -n 655360
     checkJava
     service kibana stop >/dev/null 2>&1
+
     [ -x $exec ] || exit 5
-    if [ -n "$MAX_LOCKED_MEMORY" -a -z "$ES_HEAP_SIZE" ]; then
-        echo "MAX_LOCKED_MEMORY is set - ES_HEAP_SIZE must also be set"
-        return 7
-    fi
-    if [ -n "$MAX_LOCKED_MEMORY" ]; then
-        ulimit -l $MAX_LOCKED_MEMORY
-    fi
-    export ES_GC_LOG_FILE
 
     # Ensure that the PID_DIR exists (it is cleaned at OS startup time)
     if [ -n "$PID_DIR" ] && [ ! -e "$PID_DIR" ]; then

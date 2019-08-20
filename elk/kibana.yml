@@ -3,3 +3,4 @@ server.host: "localhost"
 elasticsearch.hosts: ["http://192.168.xxx.xxx:9200"]
 elasticsearch.username: "elastic"
 elasticsearch.password: "xxxxxxxx"
+i18n.locale: zh-CN
