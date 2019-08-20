@@ -54,8 +54,11 @@ export ES_DIRECT_SIZE
 export ES_JAVA_OPTS
 export ES_GC_LOG_FILE
 export ES_STARTUP_SLEEP_TIME
-export JAVA_HOME
 export ES_INCLUDE
+
+export JAVA_HOME=$ES_HOME/jdk
+export PATH=$JAVA_HOME/bin:$PATH
+export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 
 lockfile=/var/lock/subsys/$prog
 
