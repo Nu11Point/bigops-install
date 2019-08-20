@@ -23,13 +23,6 @@ exec="$ES_HOME/bin/elasticsearch"
 prog="elasticsearch"
 pidfile="$PID_DIR/${prog}.pid"
 
-export ES_HEAP_SIZE
-export ES_HEAP_NEWSIZE
-export ES_DIRECT_SIZE
-export ES_JAVA_OPTS
-export ES_STARTUP_SLEEP_TIME
-export ES_INCLUDE
-
 export JAVA_HOME=$ES_HOME/jdk
 export PATH=$JAVA_HOME/bin:$PATH
 export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
