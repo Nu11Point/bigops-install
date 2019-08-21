@@ -3,8 +3,9 @@ Description=es-head
 After=network.target
 
 [Service]
-PIDFile=/var/run/es-head.pid
-ExecStart=cd /opt/es-head && ./node_modules/grunt/bin/grunt server
+PIDFile=/var/run/eshead.pid
+WorkingDirectory=/opt/es-head
+ExecStart=/usr/local/node/bin/npm run start
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
 PrivateTmp=false
