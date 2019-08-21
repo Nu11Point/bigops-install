@@ -7,9 +7,6 @@ if [ -f /etc/rc.status ]; then
     rc_reset
 fi
 
-#
-# Source function library.
-#
 if [ -f /etc/rc.d/init.d/functions ]; then
     . /etc/rc.d/init.d/functions
 fi
@@ -17,22 +14,18 @@ fi
 # Sets the default values for elasticsearch variables used in this script
 ES_USER="es"
 ES_GROUP="es"
-ES_HOME="/opt/es"
-PID_DIR="/var/run"
-exec="$ES_HOME/bin/elasticsearch"
+
 prog="elasticsearch"
-pidfile="$PID_DIR/${prog}.pid"
+pidfile="/var/run/${prog}.pid"
+lockfile=/var/lock/subsys/$prog
+
+ES_HOME="/opt/es"
+exec="$ES_HOME/bin/elasticsearch"
 
 export JAVA_HOME=$ES_HOME/jdk
 export PATH=$JAVA_HOME/bin:$PATH
 export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 
-lockfile=/var/lock/subsys/$prog
-
-# backwards compatibility for old config sysconfig files, pre 0.90.1
-if [ -n $USER ] && [ -z $ES_USER ] ; then 
-   ES_USER=$USER
-fi
 
 checkJava() {
     if [ -x "$JAVA_HOME/bin/java" ]; then
@@ -55,17 +48,12 @@ start() {
 
     [ -x $exec ] || exit 5
 
-    # Ensure that the PID_DIR exists (it is cleaned at OS startup time)
-    if [ -n "$PID_DIR" ] && [ ! -e "$PID_DIR" ]; then
-        mkdir -p "$PID_DIR" && chown "$ES_USER":"$ES_GROUP" "$PID_DIR"
-    fi
     if [ -n "$pidfile" ] && [ ! -e "$pidfile" ]; then
         touch "$pidfile" && chown "$ES_USER":"$ES_GROUP" "$pidfile"
     fi
 
     cd $ES_HOME
     echo -n $"Starting $prog: "
-    # if not running, start it up here, usually something like "daemon $exec"
     daemon --user $ES_USER --pidfile $pidfile $exec -p $pidfile -d
     retval=$?
     echo
@@ -90,24 +78,6 @@ restart() {
     start
 }
 
-reload() {
-    restart
-}
-
-force_reload() {
-    restart
-}
-
-rh_status() {
-    # run checks to determine if the service is running or use generic status
-    status -p $pidfile $prog
-}
-
-rh_status_q() {
-    rh_status >/dev/null 2>&1
-}
-
-
 case "$1" in
     start)
         rh_status_q && exit 0
@@ -120,22 +90,8 @@ case "$1" in
     restart)
         $1
         ;;
-    reload)
-        rh_status_q || exit 7
-        $1
-        ;;
-    force-reload)
-        force_reload
-        ;;
-    status)
-        rh_status
-        ;;
-    condrestart|try-restart)
-        rh_status_q || exit 0
-        restart
-        ;;
     *)
-        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart|reload|force-reload}"
+        echo $"Usage: $0 {start|stop|restart}"
         exit 2
 esac
 exit $?

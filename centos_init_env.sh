@@ -76,6 +76,9 @@ if [ -f /usr/bin/systemctl ];then
         systemctl disable $i
     done
     systemctl enable elasticsearch.service
+    systemctl enable es.service
+    systemctl enable es-head.service
+    systemctl enable kibana.service
     systemctl enable bigserver.service
     systemctl enable bigweb.service
     systemctl enable gitlab-runner.service
@@ -104,6 +107,9 @@ else
         chkconfig --level 345 $i off
     done
     chkconfig --level 345 elasticsearch on
+    chkconfig --level 345 es on
+    chkconfig --level 345 es-head on
+    chkconfig --level 345 kibana on
     chkconfig --level 345 bigserver on
     chkconfig --level 345 bigweb on
     chkconfig --level 345 gitlab-runner on
@@ -172,7 +178,7 @@ if [ -e /usr/lib/jvm/java ];then
     sed -i '/^export PATH=.*/g' /etc/profile
     sed -i '/^export CLASSPATH=.*/g' /etc/profile
     echo 'export JAVA_HOME=/usr/lib/jvm/java'>>/etc/profile
-    echo 'export PATH=$PATH:$JAVA_HOME/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib64:/lib64'>>/etc/profile
+    echo 'export PATH=$JAVA_HOME/bin:$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib64:/lib64'>>/etc/profile
     echo 'export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar'>>/etc/profile
 fi
 
@@ -256,7 +262,7 @@ fi
 sed -i 's/^[ ]*StrictHostKeyChecking.*/StrictHostKeyChecking no/g' /etc/ssh/ssh_config
 
 export JAVA_HOME=/usr/lib/jvm/java
-export PATH=$PATH:$JAVA_HOME/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib64:/lib64
+export PATH=$JAVA_HOME/bin:$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib64:/lib64
 export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 
 cd ~
