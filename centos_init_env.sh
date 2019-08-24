@@ -66,7 +66,7 @@ wget -O /etc/yum.repos.d/remi.repo https://raw.githubusercontent.com/yunweibang/
 wget -O /etc/yum.repos.d/nginx.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/nginx.repo
 yum -y update
 yum -y install ansible apr apr-devel apr-util autoconf automake bison bzip2 curl dos2unix expat-devel \
-freerdp freerdp-devel fping flex gcc gcc-c++ g++ \
+freerdp freerdp-devel fping flex gcc gcc-c++ g++ git \
 java-1.8.0-openjdk java-1.8.0-openjdk-devel java-1.8.0-openjdk-headless java-1.8.0-openjdk-accessibility \
 kde-l10n-Chinese libssh2 libssh2-devel libtool* make net-tools nginx ntpdate nmap ntsysv openssl openssl-devel openssl-libs \
 pam-devel perl perl-devel subversion subversion-devel sysstat systemd-devel screen tomcat-native traceroute vim zlib-devel

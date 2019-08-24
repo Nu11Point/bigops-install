@@ -3,6 +3,9 @@ Description=elasticsearch
 After=network.target
 
 [Service]
+LimitCORE=infinity
+LimitNOFILE=655360
+LimitNPROC=655360
 User=es
 Group=es
 PIDFile=/var/run/es.pid
