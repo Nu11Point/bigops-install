@@ -23,16 +23,6 @@ else
     service iptables stop
 fi
 
-#关闭ipv6
-if [ ! -f /usr/bin/systemctl ];then
-cat << EOF > /etc/modprobe.d/ipv6.conf
-alias net-pf-10 off
-options ipv6 disable=1
-EOF
-sed -i '/NETWORKING_IPV6.*/d' /etc/sysconfig/network
-echo 'NETWORKING_IPV6=no' >> /etc/sysconfig/network
-fi
-
 #关闭NOZEROCONF
 sed -i '/NOZEROCONF.*/d' /etc/sysconfig/network
 echo "NOZEROCONF=yes" >> /etc/sysconfig/network
@@ -146,10 +136,6 @@ wget -O /etc/security/limits.conf https://raw.githubusercontent.com/yunweibang/b
 wget -O /etc/security/limits.d/90-nproc.conf https://raw.githubusercontent.com/yunweibang/bigops-install/master/90-nproc.conf
 
 wget -O /etc/sysctl.conf https://raw.githubusercontent.com/yunweibang/bigops-install/master/sysctl.conf
-if [ -f /usr/bin/systemctl ];then
-    echo 'net.ipv6.conf.all.disable_ipv6 = 1' >>/etc/sysctl.conf
-    echo 'net.ipv6.conf.default.disable_ipv6 = 1' >>/etc/sysctl.conf
-fi
 
 sed -i '/ \/ .* defaults /s/defaults/defaults,noatime,nodiratime,nobarrier/g' /etc/fstab
 sed -i 's/tmpfs.*/tmpfs\t\t\t\/dev\/shm\t\ttmpfs\tdefaults,nosuid,noexec,nodev 0 0/g' /etc/fstab
@@ -177,14 +163,14 @@ wget -O /etc/ansible/ansible.cfg https://raw.githubusercontent.com/yunweibang/bi
 
 if [ -e /usr/lib/jvm/java ];then
     sed -i '/^export JAVA_HOME=.*/g' /etc/profile
-    sed -i '/^export PATH=.*/g' /etc/profile
+    sed -i '/^export PATH=$JAVA_HOME.*/g' /etc/profile
     sed -i '/^export CLASSPATH=.*/g' /etc/profile
     echo 'export JAVA_HOME=/usr/lib/jvm/java'>>/etc/profile
-    echo 'export PATH=$JAVA_HOME/bin:$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib64:/lib64'>>/etc/profile
+    echo 'export PATH=$JAVA_HOME/bin:$PATH:/usr/local/sbin:/usr/local/bin'>>/etc/profile
     echo 'export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar'>>/etc/profile
 fi
 
-sed -rni 'h;n;:a;H;n;$!ba;g;s/(\n){2,}/\n\n/g;p' /etc/profile
+sed -ie '/^$/{N;/\n$/D};' /etc/profile
 source /etc/profile
 
 if [ -d /usr/local/lib ];then
