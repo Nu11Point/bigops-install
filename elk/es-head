@@ -4,7 +4,7 @@
  
 case "$1" in
 start)
-    cd /opt/es-head
+    cd /opt/bigops/es-head
     npm run start >/dev/null 2>&1 &
     echo "es-head startup"
     ;;  
@@ -22,7 +22,7 @@ restart)
     fi
     echo "es-head stopped"
 
-    cd /opt/es-head
+    cd /opt/bigops/es-head
     npm run start >/dev/null 2>&1 &
     echo "es-head startup"
     ;;  

@@ -4,7 +4,7 @@
  
 case "$1" in
 start)
-    cd  /opt/kibana
+    cd  /opt/bigops/kibana
     ./bin/kibana --allow-root >/dev/null 2>&1 &
     echo "kibana startup"
     ;;  
@@ -22,7 +22,7 @@ restart)
     fi
     echo "kibana stopped"
 
-    cd  /opt/kibana
+    cd  /opt/bigops/kibana
         ./bin/kibana --allow-root >/dev/null 2>&1 &
     echo "kibana startup"
     ;;  

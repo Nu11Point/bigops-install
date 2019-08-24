@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 PIDFile=/var/run/eshead.pid
-WorkingDirectory=/opt/es-head
+WorkingDirectory=/opt/bigops/es-head
 ExecStart=/usr/local/node/bin/npm run start
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID

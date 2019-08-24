@@ -67,21 +67,20 @@ if [ -f /usr/bin/systemctl ];then
     for i in $(systemctl list-unit-files|egrep 'enabled'|awk '{print $1}'|egrep -v '\.target$|@\.');do
         systemctl disable $i
     done
-    systemctl enable elasticsearch.service
-    systemctl enable es.service
-    systemctl enable es-head.service
-    systemctl enable kibana.service
-    systemctl enable bigserver.service
-    systemctl enable bigweb.service
-    systemctl enable gitlab-runner.service
-    systemctl enable gitlab-runsvdir.service
-    systemctl enable kibana.service
     systemctl enable mysqld.service
     systemctl enable nginx.service
     systemctl enable php-fpm.service
     systemctl enable postfix.service
+    systemctl enable bigweb.service
+    systemctl enable bigserver.service
+    systemctl enable gitlab-runner.service
+    systemctl enable gitlab-runsvdir.service
     systemctl enable zabbix-agent.service
     systemctl enable zabbix-server.service
+    systemctl enable es.service
+    systemctl enable kibana.service
+    systemctl enable es-head.service
+    systemctl enable cerebro.service
 
     systemctl enable auditd.service
     systemctl enable crond.service
@@ -98,21 +97,20 @@ else
     for i in $(ls /etc/rc3.d/S*|cut -c 15-|egrep -v local);do
         chkconfig --level 345 $i off
     done
-    chkconfig --level 345 elasticsearch on
-    chkconfig --level 345 es on
-    chkconfig --level 345 es-head on
-    chkconfig --level 345 kibana on
-    chkconfig --level 345 bigserver on
-    chkconfig --level 345 bigweb on
-    chkconfig --level 345 gitlab-runner on
-    chkconfig --level 345 gitlab-runsvdir on
-    chkconfig --level 345 kibana on
     chkconfig --level 345 mysqld on
     chkconfig --level 345 nginx on
     chkconfig --level 345 php-fpm on
     chkconfig --level 345 postfix on
+    chkconfig --level 345 bigweb on
+    chkconfig --level 345 bigserver on
+    chkconfig --level 345 gitlab-runner on
+    chkconfig --level 345 gitlab-runsvdir on
     chkconfig --level 345 zabbix-agent on
     chkconfig --level 345 zabbix-server on
+    chkconfig --level 345 es on
+    chkconfig --level 345 kibana on
+    chkconfig --level 345 es-head on
+    chkconfig --level 345 cerebro on
 
     chkconfig --level 345 sysstat on
     chkconfig --level 345 network on
@@ -210,6 +208,8 @@ if [ ! -f /usr/bin/systemctl ];then
             echo ---------------------------------
             exit
         fi
+        cd ~
+        rm -rf openssl-1.0.2s
     fi
 
     cd ~
@@ -244,6 +244,8 @@ if [ ! -f /usr/bin/systemctl ];then
             echo ---------------------------------
             exit
         fi
+        cd ~
+        rm -rf openssh-8.0p1
     fi
 fi
 
@@ -273,6 +275,8 @@ if [ ! -f /usr/local/apr/lib/libtcnative-1.a ];then
     fi
 
     cd ~
+    rm -rf apr-1.6.5
+
     if [ ! -f apr-util-1.6.1.tar.gz ];then
         wget -c http://archive.apache.org/dist/apr/apr-util-1.6.1.tar.gz
     fi
@@ -291,6 +295,8 @@ if [ ! -f /usr/local/apr/lib/libtcnative-1.a ];then
     fi
 
     cd ~
+    rm -rf apr-util-1.6.1
+
     if [ ! -f tomcat-native-1.2.23-src.tar.gz ];then
         wget -c http://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-connectors/native/1.2.23/source/tomcat-native-1.2.23-src.tar.gz
     fi
@@ -399,6 +405,32 @@ ln -sf /usr/bin/jq-linux64 /usr/bin/jq
 
 if [ ! -d /opt/ngxlog/ ];then
     mkdir /opt/ngxlog
+fi
+
+
+if [ -d openssl-1.0.2s ];then
+    rm -rf openssl-1.0.2s
+fi
+if [ -d openssh-8.0p1 ];then
+    rm -rf openssh-8.0p1
+fi
+if [ -d apr-1.6.5 ];then
+    rm -rf apr-1.6.5
+fi
+if [ -d apr-util-1.6.1 ];then
+    rm -rf apr-util-1.6.1
+fi
+if [ -d tomcat-native-1.2.23-src ];then
+    rm -rf tomcat-native-1.2.23-src
+fi
+if [ -d libssh2-1.8.2 ];then
+    rm -rf libssh2-1.8.2
+fi
+if [ -d medusa-2.2 ];then
+    rm -rf medusa-2.2
+fi
+if [ -d nmap-7.80 ];then
+    rm -rf nmap-7.80
 fi
 
 echo

@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 PIDFile=/var/run/kibana.pid
-ExecStart=/opt/kibana/bin/kibana --allow-root
+ExecStart=/opt/bigops/kibana/bin/kibana --allow-root
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
 PrivateTmp=false
