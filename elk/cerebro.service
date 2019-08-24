@@ -1,0 +1,13 @@
+[Unit]
+Description=cerebro
+After=network.target
+
+[Service]
+PIDFile=/var/run/cerebro.pid
+ExecStart=/opt/cerebro/bin/cerebro -Dhttp.port=9000
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=false
+
+[Install]
+WantedBy=multi-user.target

@@ -68,8 +68,10 @@ yum -y update
 yum -y install ansible apr apr-devel apr-util autoconf automake bison bzip2 curl dos2unix expat-devel \
 freerdp freerdp-devel fping flex gcc gcc-c++ g++ git \
 java-1.8.0-openjdk java-1.8.0-openjdk-devel java-1.8.0-openjdk-headless java-1.8.0-openjdk-accessibility \
-kde-l10n-Chinese libssh2 libssh2-devel libtool* make net-tools nginx ntpdate nmap ntsysv openssl openssl-devel openssl-libs \
-pam-devel perl perl-devel subversion subversion-devel sysstat systemd-devel screen tomcat-native traceroute vim zlib-devel
+kde-l10n-Chinese libssh2 libssh2-devel libtool* make net-tools nginx ntpdate nmap ntsysv nodejs npm \
+openssl openssl-devel openssl-libs pam-devel perl perl-devel subversion subversion-devel sysstat \
+systemd-devel screen tomcat-native traceroute vim zlib-devel
+
 
 if [ -f /usr/bin/systemctl ];then
     for i in $(systemctl list-unit-files|egrep 'enabled'|awk '{print $1}'|egrep -v '\.target$|@\.');do

@@ -42,7 +42,7 @@ checkJava() {
 
 start() {
     sysctl -q -w vm.max_map_count=655360
-    ulimit -n 655360
+    ulimit -SHn 655360
     checkJava
     service kibana stop >/dev/null 2>&1
 
