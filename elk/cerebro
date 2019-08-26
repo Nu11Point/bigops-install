@@ -1,0 +1,33 @@
+#!/bin/sh
+#chkconfig: 2345 81 07
+#description: cerebro
+ 
+case "$1" in
+start)
+    /opt/bigops/cerebro/bin/cerebro -Dhttp.port=9000 >/dev/null 2>&1 &
+    echo "cerebro startup"
+    ;;  
+stop)
+    cerebro_pid=`ps aux|grep cerebro.cerebro|grep -v grep|awk '{print $2}'`
+    if [ ! -z "$cerebro_pid" ];then
+        kill -9 $cerebro_pid
+    fi
+    echo "cerebro stopped"
+    ;;  
+restart)
+    cerebro_pid=`ps aux|grep cerebro.cerebro|grep -v grep|awk '{print $2}'`
+    if [ ! -z "$cerebro_pid" ];then
+        kill -9 $cerebro_pid
+    fi
+    echo "cerebro stopped"
+
+    /opt/bigops/cerebro/bin/cerebro -Dhttp.port=9000 >/dev/null 2>&1 &
+    echo "cerebro startup"
+    ;;  
+*)
+    echo "start|stop|restart"
+    ;;  
+esac
+
+exit $?
+
