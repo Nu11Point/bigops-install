@@ -1,10 +1,10 @@
-cluster.name: bastion
+cluster.name: bigops
 node.name: 192.168.xxx.xxx
 
 node.master: true
 node.data: true
 
-network.host: 192.168.xxx.xxx
+network.host: 0.0.0.0
 http.port: 9200
 
 path.data: /opt/es_data

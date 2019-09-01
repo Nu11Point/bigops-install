@@ -1,6 +1,6 @@
 server.port: 5601
-server.host: "localhost"
-elasticsearch.hosts: ["http://192.168.xxx.xxx:9200"]
+server.host: "0.0.0.0"
+elasticsearch.hosts: ["http://127.0.0.1:9200"]
 elasticsearch.username: "elastic"
 elasticsearch.password: "xxxxxxxx"
 i18n.locale: zh-CN

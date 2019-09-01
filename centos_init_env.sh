@@ -55,12 +55,12 @@ wget -O /etc/yum.repos.d/epel.repo https://raw.githubusercontent.com/yunweibang/
 wget -O /etc/yum.repos.d/remi.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/remi.repo
 wget -O /etc/yum.repos.d/nginx.repo https://raw.githubusercontent.com/yunweibang/yum.repos.d/master/nginx.repo
 yum -y update
-yum -y install ansible apr apr-devel apr-util autoconf automake bison bzip2 curl dos2unix expat-devel \
+yum -y install ansible apr apr-devel apr-util autoconf automake bison bzip2 clang curl dos2unix expat-devel \
 freerdp freerdp-devel fping flex gcc gcc-c++ g++ git \
 java-1.8.0-openjdk java-1.8.0-openjdk-devel java-1.8.0-openjdk-headless java-1.8.0-openjdk-accessibility \
-kde-l10n-Chinese libssh2 libssh2-devel libtool* make net-tools nginx ntpdate nmap ntsysv nodejs npm \
-openssl openssl-devel openssl-libs pam-devel perl perl-devel subversion subversion-devel sysstat \
-systemd-devel screen tomcat-native traceroute vim zlib-devel
+kde-l10n-Chinese libssh2 libssh2-devel libtool* libpcap-dev masscan make \
+net-tools nginx ntpdate nmap ntsysv nodejs npm openssl openssl-devel openssl-libs pam-devel perl perl-devel \
+subversion subversion-devel sysstat systemd-devel screen tomcat-native traceroute vim zlib-devel
 
 
 if [ -f /usr/bin/systemctl ];then
