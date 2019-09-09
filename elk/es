@@ -44,7 +44,6 @@ start() {
     sysctl -q -w vm.max_map_count=655360
     ulimit -SHn 655360
     checkJava
-    service kibana stop >/dev/null 2>&1
 
     [ -x $exec ] || exit 5
 
@@ -57,6 +56,7 @@ start() {
     daemon --user $ES_USER --pidfile $pidfile $exec -p $pidfile -d
     retval=$?
     echo
+    service kibana restart >/dev/null 2>&1
     [ $retval -eq 0 ] && touch $lockfile
     return $retval
 }
@@ -67,10 +67,7 @@ stop() {
     if [ ! -z "$kibana_pid" ];then
         kill -9 $kibana_pid
     fi
-    retval=$?
     echo
-    [ $retval -eq 0 ] && rm -f $lockfile
-    return $retval
 }
 
 restart() {
@@ -80,11 +77,11 @@ restart() {
 
 case "$1" in
     start)
-        rh_status_q && exit 0
+        #rh_status_q && exit 0
         $1
         ;;
     stop)
-        rh_status_q || exit 0
+        #rh_status_q || exit 0
         $1
         ;;
     restart)
