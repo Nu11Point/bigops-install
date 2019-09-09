@@ -151,8 +151,6 @@ if [ -f /bin/clean_mail.sh ];then
     fi
 fi
 
-for i in $(ls /sys/class/net|egrep -v 'lo|usb') ; do ethtool -K $i rx off; done
-for i in $(ls /sys/class/net|egrep -v 'lo|usb') ; do ethtool -K $i tx off; done
 for i in $(ls /sys/class/net|egrep -v 'lo|usb') ; do ethtool -K $i tso off; done
 for i in $(ls /sys/class/net|egrep -v 'lo|usb') ; do ethtool -K $i gso off; done
 for i in $(ls /sys/class/net|egrep -v 'lo|usb') ; do ethtool -K $i gro off; done
@@ -333,8 +331,8 @@ medusainst(){
         echo ---------------------------------
         exit
     fi
-    cp -f /usr/local/lib/libssh2.* /lib/
-    cp -f /usr/local/lib/libssh2.* /lib64/
+    cp -fs /usr/local/lib/libssh2.* /lib/
+    cp -fs /usr/local/lib/libssh2.* /lib64/
 
     cd ~
     if [ ! -f medusa-2.2.tar.gz ];then

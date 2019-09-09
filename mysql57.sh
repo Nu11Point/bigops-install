@@ -67,12 +67,12 @@ inst(){
         mypass='bigops'
     fi
 
-    mysql -uroot -e "grant all privileges on *.* to 'root'@'127.0.0.1' identified with mysql_native_password by '${mypass}'"
+    mysql --connect-timeout 5 -uroot -e "grant all privileges on *.* to 'root'@'127.0.0.1' identified with mysql_native_password by '${mypass}'"
     if [ $? == 0 ];then
         echo
         echo ----------------------------------
         echo "Installed successfully, root@127.0.0.1 password is ${mypass}"
-        echo "please running command testing: mysql -uroot -h127.0.0.1 -p${mypass}"
+        echo "please running command testing: mysql --connect-timeout 5 -uroot -h127.0.0.1 -p${mypass}"
         echo ----------------------------------
     else
         echo "Installed failure!"
